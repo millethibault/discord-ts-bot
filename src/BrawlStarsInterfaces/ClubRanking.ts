@@ -1,13 +1,4 @@
-export type ClubRanking = Club[]
-
-export interface Club {
-  tag: string
-  name: string
-  badgeId: number
-  trophies: number
-  rank: number
-  memberCount: number
-}
+import { ClubRanking } from '../interfaces/brawlStarsInterfaces/clubRanking.js';
 
 import requestBrawlStarsApi from './Utils/requestBrawlStarsApi.js';
 

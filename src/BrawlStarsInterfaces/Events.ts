@@ -1,39 +1,6 @@
-export type Rotation = TempEvent[];
-
-interface TempEventString {
-  startTime: string;
-  endTime: string;
-  slotId: number;
-  event: Event;
-}
-
-export interface TempEvent {
-  startTime: Date;
-  endTime: Date;
-  slotId: number;
-  event: Event;
-}
-
-export interface Event {
-  id: number;
-  mode: string;
-  map: string;
-  modifiers?: string[];
-}
-
 import requestBrawlStarsApi from './Utils/requestBrawlStarsApi.js';
-import parseBrawlStarsDate from './Utils/parseBrawlStarsDate';
-
-
-function parseEvents(rotationString: TempEventString[]): Rotation {
-  const rotation = rotationString.map(item => ({
-    startTime: parseBrawlStarsDate(item.startTime),
-    endTime: parseBrawlStarsDate(item.endTime),
-    slotId: item.slotId,
-    event: item.event
-  }));
-  return rotation;
-}
+import parseEvents from './Utils/parseEvenrs.js';
+import { Rotation } from '../interfaces/brawlStarsInterfaces/tempEvent.js';
 
 /**
  * 🔍 Récupère la rotation des événemnts en cours dans le jeu

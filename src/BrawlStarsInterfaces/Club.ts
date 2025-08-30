@@ -1,26 +1,4 @@
-export interface Club {
-  tag: string
-  name: string
-  description: string
-  type: string
-  badgeId: number
-  requiredTrophies: number
-  trophies: number
-  members: Member[]
-}
-
-export interface Member {
-  tag: string
-  name: string
-  nameColor: string
-  role: string
-  trophies: number
-  icon: Icon
-}
-
-export interface Icon {
-  id: number
-}
+import { Club } from '../interfaces/brawlStarsInterfaces/club';
 
 import requestBrawlStarsApi from './Utils/requestBrawlStarsApi.js';
 import encodeTag from './Utils/encodeTag.js';

@@ -1,23 +1,4 @@
-export type PlayerRanking = Player[]
-
-export interface Player {
-  tag: string
-  name: string
-  nameColor: string
-  icon: Icon
-  trophies: string
-  rank: number
-  club?: Club
-}
-
-export interface Icon {
-  id: number
-}
-
-export interface Club {
-  name: string
-}
-
+import { PlayerRanking } from '../interfaces/brawlStarsInterfaces/rankedPlayer.js';
 import requestBrawlStarsApi from './Utils/requestBrawlStarsApi.js';
 
 /**

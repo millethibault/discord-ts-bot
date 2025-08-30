@@ -1,21 +1,4 @@
-export type Brawlers = Brawler[]
-
-export interface Brawler {
-  id: number
-  name: string
-  starPowers: StarPower[]
-  gadgets: Gadget[]
-}
-
-export interface StarPower {
-  id: number
-  name: string
-}
-
-export interface Gadget {
-  id: number
-  name: string
-}
+import { Brawlers } from '../interfaces/brawlStarsInterfaces/brawler';
 
 import requestBrawlStarsApi from './Utils/requestBrawlStarsApi';
 

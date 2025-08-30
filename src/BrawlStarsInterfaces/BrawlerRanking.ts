@@ -1,23 +1,4 @@
-export type BrawlerRanking = Player[]
-
-export interface Player {
-  tag: string
-  name: string
-  nameColor: string
-  icon: Icon
-  trophies: number
-  rank: number
-  club?: Club
-}
-
-export interface Icon {
-  id: number
-}
-
-export interface Club {
-  name: string
-}
-
+import { BrawlerRanking } from '../interfaces/brawlStarsInterfaces/rankedPlayer';
 import requestBrawlStarsApi from './Utils/requestBrawlStarsApi';
 import bsapi from './brawl-stars-api';
 
@@ -33,7 +14,8 @@ export async function getBrawlerRankings(brawler: string, countryCode='global', 
   const brawlerFound = brawlers.find(brawlerItem => brawlerItem.name == brawler.toUpperCase());
   if (!brawlerFound) throw new Error(`Le brawler ${brawler} n'a pas été trouvé !`);
   const brawlerId = brawlerFound.id;
-  const url = `https://api.brawlstars.com/v1/rankings/${countryCode}/brawlers/${brawlerId}?limit=${limit}`;
+  const requestLimit = Math.max(1, Math.min(200, limit));
+  const url = `https://api.brawlstars.com/v1/rankings/${countryCode}/brawlers/${brawlerId}?limit=${requestLimit}`;
   const response = await requestBrawlStarsApi(url);
   return response.items;
 }

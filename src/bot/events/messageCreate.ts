@@ -2,6 +2,7 @@ import { client } from '../client';
 import { getPrefix } from '../../database/prefix';
 import { handleHello } from '../../commands/hello';
 import { handleSetPrefix } from '../../commands/setPrefix';
+import { handleBrawlerRanking } from '../../commands/brawlStars/getBrawlerRanking';
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !client.user || !message.guild) return;
@@ -20,4 +21,8 @@ client.on('messageCreate', async message => {
   if (message.content.startsWith(prefix + 'setprefix')) {
     return handleSetPrefix(message);
   }
-});
+
+  if (message.content.startsWith(prefix + 'brawlerRanking')) {
+    return handleBrawlerRanking(message);
+  }
+}); 

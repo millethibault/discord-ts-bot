@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 import { setPrefix } from '../database/prefix';
 
 export async function handleSetPrefix(message: Message<true>) {
-  const args = message.content.split(' ');
+  const args = message.content.split(/\s+/);
   const newPrefix = args[1];
   if (!newPrefix) return;
 
