@@ -8,6 +8,10 @@ import { handleGetClubs } from '../../commands/brawlStars/discordCommands/getClu
 import { handleRemoveClub } from '../../commands/brawlStars/discordCommands/removeClub';
 import { handleSetProfile } from '../../commands/brawlStars/discordCommands/setProfile';
 import { handleGetProfile } from '../../commands/brawlStars/discordCommands/profile';
+import { handleSetClubRole } from '../../commands/brawlStars/discordCommands/setClubRole';
+import { handleGetClubRole } from '../../commands/brawlStars/discordCommands/getClubRole';
+import { handleGetGradeRole } from '../../commands/brawlStars/discordCommands/getGradeRoles';
+import { handleSetGradeRole } from '../../commands/brawlStars/discordCommands/setGradeRole';
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !client.user || !message.guild) return;
@@ -46,8 +50,24 @@ client.on('messageCreate', async message => {
   if (message.content.startsWith(prefix + 'setprofile')) {
     return handleSetProfile(message);
   }
-
+  
   if (message.content.startsWith(prefix + 'profile')) {
     return handleGetProfile(message);
+  }
+
+  if (message.content.startsWith(prefix + 'setclubrole')) {
+    return handleSetClubRole(message);
+  }
+
+  if (message.content.startsWith(prefix + 'getclubrole')) {
+    return handleGetClubRole(message);
+  }
+
+  if (message.content.startsWith(prefix + 'getgraderole')) {
+    return handleGetGradeRole(message);
+  }
+
+  if (message.content.startsWith(prefix + 'setgraderole')) {
+    return handleSetGradeRole(message);
   }
 }); 

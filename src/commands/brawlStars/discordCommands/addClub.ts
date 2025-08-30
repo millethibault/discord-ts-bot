@@ -11,7 +11,7 @@ export async function handleAddClub(message: Message<true>): Promise<Message<tru
 
     return bsapi.getClubData(clubTag)
     .then(async club => {
-        await addClub(message.guild!.id, club);
+        await addClub(message.guild, club);
         return message.channel.send(`Le club ${club.name} (\`${club.tag}\`) a été ajouté au serveur ${message.guild.name} ✅`);
     })
     .catch(err => {
