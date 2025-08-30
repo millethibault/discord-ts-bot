@@ -12,6 +12,8 @@ import { handleSetClubRole } from '../../commands/brawlStars/discordCommands/set
 import { handleGetClubRole } from '../../commands/brawlStars/discordCommands/getClubRole';
 import { handleGetGradeRole } from '../../commands/brawlStars/discordCommands/getGradeRoles';
 import { handleSetGradeRole } from '../../commands/brawlStars/discordCommands/setGradeRole';
+import { handleSetTrophyRole } from '../../commands/brawlStars/discordCommands/setTrophyRole';
+import { handleGetTrophyRole } from '../../commands/brawlStars/discordCommands/getTrophyRole';
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !client.user || !message.guild) return;
@@ -35,7 +37,7 @@ client.on('messageCreate', async message => {
     return handleBrawlerRanking(message);
   }
 
-  if (message.content.startsWith(prefix + 'addclub')) {
+  if (message.content.startsWith(prefix + 'setclub')) {
     return handleAddClub(message);
   }
 
@@ -69,5 +71,13 @@ client.on('messageCreate', async message => {
 
   if (message.content.startsWith(prefix + 'setgraderole')) {
     return handleSetGradeRole(message);
+  }
+
+  if (message.content.startsWith(prefix + 'settrophyrole')) {
+    return handleSetTrophyRole(message);
+  }
+
+  if (message.content.startsWith(prefix + 'gettrophyrole')) {
+    return handleGetTrophyRole(message);
   }
 }); 

@@ -2,7 +2,6 @@ import { Message, Role } from 'discord.js';
 import bsapi from '../../../BrawlStarsInterfaces/brawl-stars-api';
 import { setClubRole } from '../../../database/clubRole';
 import { clearTag } from '../../../BrawlStarsInterfaces/Utils/tag';
-import { addClub, getClubs } from '../../../database/club';
 
 export async function handleSetClubRole(message: Message<true>): Promise<Message<true>> {
     const args = message.content.split(/\s+/);
@@ -16,8 +15,6 @@ export async function handleSetClubRole(message: Message<true>): Promise<Message
 
     return bsapi.getClubData(clubTag)
     .then(async club => {
-        const guildClubs = await getClubs(message.guild);
-        if(!guildClubs.find(guildClub => guildClub.tag == club.tag)) addClub(message.guild, club);
         await setClubRole(message.guild, roleMention, club);
         return message.channel.send(`Le club ${club.name} a été associé au rôle ${roleMention.name} ✅`);
     })
