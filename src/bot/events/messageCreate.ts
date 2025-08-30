@@ -2,7 +2,12 @@ import { client } from '../client';
 import { getPrefix } from '../../database/prefix';
 import { handleHello } from '../../commands/hello';
 import { handleSetPrefix } from '../../commands/setPrefix';
-import { handleBrawlerRanking } from '../../commands/brawlStars/getBrawlerRanking';
+import { handleBrawlerRanking } from '../../commands/brawlStars/apiConnectionCommands/getBrawlerRanking';
+import { handleAddClub } from '../../commands/brawlStars/discordCommands/addClub';
+import { handleGetClubs } from '../../commands/brawlStars/discordCommands/getClubs';
+import { handleRemoveClub } from '../../commands/brawlStars/discordCommands/removeClub';
+import { handleSetProfile } from '../../commands/brawlStars/discordCommands/setProfile';
+import { handleGetProfile } from '../../commands/brawlStars/discordCommands/profile';
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !client.user || !message.guild) return;
@@ -22,7 +27,27 @@ client.on('messageCreate', async message => {
     return handleSetPrefix(message);
   }
 
-  if (message.content.startsWith(prefix + 'brawlerRanking')) {
+  if (message.content.startsWith(prefix + 'brawlerranking')) {
     return handleBrawlerRanking(message);
+  }
+
+  if (message.content.startsWith(prefix + 'addclub')) {
+    return handleAddClub(message);
+  }
+
+  if (message.content.startsWith(prefix + 'getclubs')) {
+    return handleGetClubs(message);
+  }
+
+  if (message.content.startsWith(prefix + 'removeclub')) {
+    return handleRemoveClub(message);
+  }
+
+  if (message.content.startsWith(prefix + 'setprofile')) {
+    return handleSetProfile(message);
+  }
+
+  if (message.content.startsWith(prefix + 'profile')) {
+    return handleGetProfile(message);
   }
 }); 

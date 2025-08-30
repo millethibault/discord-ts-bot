@@ -1,7 +1,7 @@
 import { Player } from '../interfaces/brawlStarsInterfaces/player.js';
 
 import requestBrawlStarsApi from './Utils/requestBrawlStarsApi.js';
-import encodeTag from './Utils/encodeTag.js';
+import { encodeTag } from './Utils/tag.js';
 
 /**
  * 🔍 Récupère les infos d'un joueur Brawl Stars via son tag

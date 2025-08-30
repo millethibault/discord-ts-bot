@@ -1,7 +1,7 @@
 import { Club } from '../interfaces/brawlStarsInterfaces/club';
 
 import requestBrawlStarsApi from './Utils/requestBrawlStarsApi.js';
-import encodeTag from './Utils/encodeTag.js';
+import { encodeTag } from './Utils/tag';
 
 /**
  * 🔍 Récupère les infos d'un club Brawl Stars via son tag

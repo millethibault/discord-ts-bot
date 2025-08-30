@@ -1,6 +1,5 @@
 import { Message } from 'discord.js';
-import bsapi from '../../BrawlStarsInterfaces/brawl-stars-api';
-import isValidCountryCode from '../../utils/isValidCountryCode';
+import bsapi from '../../../BrawlStarsInterfaces/brawl-stars-api';
 
 export function handleBrawlerRanking(message: Message<true>): Promise<Message<true>> {
     const args = message.content.split(/\s+/);

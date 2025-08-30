@@ -1,5 +1,5 @@
 import requestBrawlStarsApi from './Utils/requestBrawlStarsApi.js';
-import encodeTag from './Utils/encodeTag.js';
+import { encodeTag } from './Utils/tag.js';
 import parseBattleLog from './Utils/parseBattleLog.js';
 
 import { BattleLogHistory } from '../interfaces/brawlStarsInterfaces/battleLog.js';
