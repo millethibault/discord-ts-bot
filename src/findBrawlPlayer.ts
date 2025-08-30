@@ -1,6 +1,6 @@
 //require('./BrawlStarsInterfaces/index');
 import bsapi from './BrawlStarsInterfaces/brawl-stars-api';
-bsapi.getPlayerData('88RUVULY')
+bsapi.getPlayerBattleLog('88RUVULY')
   .then(player => console.log(JSON.stringify(player, null, 2)))
   .catch(err => console.error(err));
 

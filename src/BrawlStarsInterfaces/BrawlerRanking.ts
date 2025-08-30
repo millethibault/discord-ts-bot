@@ -30,7 +30,6 @@ import bsapi from './brawl-stars-api';
  */
 export async function getBrawlerRankings(brawler: string, countryCode='global', limit=200): Promise<BrawlerRanking> {
   const brawlers = await bsapi.getBrawlers();
-  const debug = brawler.toUpperCase();
   const brawlerFound = brawlers.find(brawlerItem => brawlerItem.name == brawler.toUpperCase());
   if (!brawlerFound) throw new Error(`Le brawler ${brawler} n'a pas été trouvé !`);
   const brawlerId = brawlerFound.id;
