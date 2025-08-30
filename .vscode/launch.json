@@ -1,0 +1,9 @@
+{
+  "type": "node",
+  "request": "launch",
+  "name": "Debug TS avec ts-node",
+  "runtimeExecutable": "npx",
+  "runtimeArgs": ["ts-node", "src/findBrawlPlayer.ts"],
+  "sourceMaps": true,
+  "skipFiles": ["<node_internals>/**"]
+}
