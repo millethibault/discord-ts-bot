@@ -24,3 +24,11 @@ export async function getTrophyRole(guild: Guild): Promise<TrophyRoleRow[]> {
   return rows;
 }
 
+export async function removeTrophyRole(guild: Guild, roleId: string): Promise<void> {
+  const pool = await connectionPromise;
+
+  await pool.execute(
+    'DELETE FROM trophyRole WHERE guildId = ? AND roleId = ?',
+    [guild.id, roleId]
+  );
+}

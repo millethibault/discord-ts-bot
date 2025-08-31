@@ -10,7 +10,7 @@ import { client } from './bot/client';
 import './bot/events/ready';
 import './bot/events/messageCreate';
 import './bot/events/interactionCreate';
-import { DISCORD_TOKEN } from './config/env';
-
+require('dotenv').config();
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 
 client.login(DISCORD_TOKEN);

@@ -9,3 +9,9 @@ dist/
 .env
 *.log
 a-faire.txt
+Dockerfile
+.dockerignore
+docker-compose.yml
+.gitignore
+.env.local
+.env.docker

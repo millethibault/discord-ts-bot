@@ -16,6 +16,7 @@ import { handleSetGradeRole, data as setGradeRoleData } from '../../commands/bra
 import { handleSetTrophyRole , data as setTrophyRoleData} from '../../commands/brawlStars/discordCommands/setTrophyRole';
 import { handleGetTrophyRole, data as getTrophyRoleData } from '../../commands/brawlStars/discordCommands/getTrophyRole';
 import { handleUpdateMember, data as updateMemberData } from '../../commands/brawlStars/discordCommands/updateMember';
+import { handleRemoveTrophyRole, data as removeTrophyRoleData, autocomplete as autocompleteRemoveTrophyRole } from '../../commands/brawlStars/discordCommands/removeTrophyRole';
 
 config();
 
@@ -32,6 +33,7 @@ const commands = [
     setGradeRoleData,
     setTrophyRoleData,
     getTrophyRoleData,
+    removeTrophyRoleData,
     updateMemberData
 ].map(data => data.toJSON());
 const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
@@ -58,6 +60,11 @@ client.on('interactionCreate', async interaction => {
     if (auto.commandName === 'removeclub') {
         if(!(interaction.guild instanceof Guild)) return;
         return autocompleteRemoveClub(auto as AutocompleteInteraction & { guild: Guild});
+    }
+
+    if (auto.commandName === 'removetrophyrole') {
+        if(!(interaction.guild instanceof Guild)) return;
+        return autocompleteRemoveTrophyRole(auto as AutocompleteInteraction & { guild: Guild});
     }
   }
 
@@ -114,6 +121,10 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.commandName === 'gettrophyroles') {
         return handleGetTrophyRole(interaction as ChatInputCommandInteraction & { guild: Guild });
+    }
+
+    if (interaction.commandName === 'removetrophyrole') {
+        return handleRemoveTrophyRole(interaction as ChatInputCommandInteraction & { guild: Guild });
     }
 
     if (interaction.commandName === 'updateprofile') {

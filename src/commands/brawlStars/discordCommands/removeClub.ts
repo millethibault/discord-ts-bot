@@ -14,7 +14,7 @@ export async function handleRemoveClub(interaction: ChatInputCommandInteraction 
     const club = clubs.find(club => club.clubTag === clubTag);
     if (!club) return interaction.editReply(`Le tag \`${clubTag}\` n'a pas été trouvé dans la liste des clubs du serveur ${interaction.guild.name} ❌`);
     await removeClub(interaction.guild, clubTag);
-    return interaction.editReply(`Le club ${club.clubName} (\`${club.clubTag}\`) a été supprimé  serveur ${interaction.guild.name} ✅`);
+    return interaction.editReply(`Le club ${club.clubName} (\`${club.clubTag}\`) a été supprimé du serveur ${interaction.guild.name} ✅`);
 }
 
 import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
@@ -23,11 +23,6 @@ import { Autocomplete } from 'undici/types/utility';
 export const data = new SlashCommandBuilder()
   .setName('removeclub')
   .setDescription('Dissocie un de vos clubs Brawl Stars de votre serveur discord.')
-  /*.addStringOption(option =>
-    option.setName('tag')
-      .setDescription('Le tag de votre club Brawl Stars')
-      .setRequired(true)
-  )*/
  .addStringOption(option =>
   option.setName('club')
     .setDescription('Choisis un club')

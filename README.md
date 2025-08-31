@@ -1,15 +1,14 @@
 # Discord Bot en TypeScript
 
+Pour reconstruire le projet :
+```bash
+npm run build
+```
+
 Pour lancer le projet :
 
 ```bash
-npx tsc
-```
-Puis le debugger fonctionne.
-
-Pour retirer les fichiers `.js` en trop et coder tranquillement :
-```bash
-npm run clean
+npm run start
 ```
 
 -----------------------
@@ -23,3 +22,14 @@ Entrer le mot de passe
 <logique SQL>
 exit
 ```
+
+-----------------------
+
+Docker :
+
+Déployer : `docker-compose up --build -d`
+Logs : `docker-compose logs -f`
+
+-----------------------
+
+Connexion au serveur :
