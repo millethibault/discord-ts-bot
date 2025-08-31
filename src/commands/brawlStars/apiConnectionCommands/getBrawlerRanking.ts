@@ -17,7 +17,7 @@ export function handleBrawlerRanking(message: Message<true>): Promise<Message<tr
         return message.channel.send(`Le classement a été loggé ! 😉 Le meilleur joueur de ${brawler.toLocaleLowerCase()} est ${ranking[0].name} avec ${ranking[0].trophies} 🏆`);
     })
     .catch(err => {
-        console.log(err);
+        console.error(err);
         return message.channel.send(`Une erreur est survenue lors de la récupération du classement ❌`);
     });
 }

@@ -14,10 +14,14 @@ import { handleGetGradeRole } from '../../commands/brawlStars/discordCommands/ge
 import { handleSetGradeRole } from '../../commands/brawlStars/discordCommands/setGradeRole';
 import { handleSetTrophyRole } from '../../commands/brawlStars/discordCommands/setTrophyRole';
 import { handleGetTrophyRole } from '../../commands/brawlStars/discordCommands/getTrophyRole';
+import { handleUpdateMember } from '../../commands/brawlStars/discordCommands/updateMember';
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !client.user || !message.guild) return;
   if(!message.inGuild()) return;
+
+  const args = message.content.split(/\s+/);
+  const command = args[0];
 
   const prefix = getPrefix(message.guild.id);
 
@@ -25,59 +29,63 @@ client.on('messageCreate', async message => {
     return message.channel.send(`🔧 Le préfixe sur ce serveur est : \`${prefix}\``);
   }
 
-  if (message.content.startsWith(prefix + 'hello')) {
+  if (command === prefix + 'hello') {
     return handleHello(message);
   }
 
-  if (message.content.startsWith(prefix + 'setprefix')) {
+  if (command === prefix + 'setprefix') {
     return handleSetPrefix(message);
   }
 
-  if (message.content.startsWith(prefix + 'brawlerranking')) {
+  if (command === prefix + 'brawlerranking') {
     return handleBrawlerRanking(message);
   }
 
-  if (message.content.startsWith(prefix + 'setclub')) {
+  if (command === prefix + 'setclub') {
     return handleAddClub(message);
   }
 
-  if (message.content.startsWith(prefix + 'getclubs')) {
+  if (command === prefix + 'getclubs') {
     return handleGetClubs(message);
   }
 
-  if (message.content.startsWith(prefix + 'removeclub')) {
+  if (command === prefix + 'removeclub') {
     return handleRemoveClub(message);
   }
 
-  if (message.content.startsWith(prefix + 'setprofile')) {
+  if (command === prefix + 'setprofile') {
     return handleSetProfile(message);
   }
   
-  if (message.content.startsWith(prefix + 'profile')) {
+  if (command === prefix + 'profile') {
     return handleGetProfile(message);
   }
 
-  if (message.content.startsWith(prefix + 'setclubrole')) {
+  if (command === prefix + 'setclubrole') {
     return handleSetClubRole(message);
   }
 
-  if (message.content.startsWith(prefix + 'getclubrole')) {
+  if (command === prefix + 'getclubrole') {
     return handleGetClubRole(message);
   }
 
-  if (message.content.startsWith(prefix + 'getgraderole')) {
+  if (command === prefix + 'getgraderole') {
     return handleGetGradeRole(message);
   }
 
-  if (message.content.startsWith(prefix + 'setgraderole')) {
+  if (command === prefix + 'setgraderole') {
     return handleSetGradeRole(message);
   }
 
-  if (message.content.startsWith(prefix + 'settrophyrole')) {
+  if (command === prefix + 'settrophyrole') {
     return handleSetTrophyRole(message);
   }
 
-  if (message.content.startsWith(prefix + 'gettrophyrole')) {
+  if (command === prefix + 'gettrophyrole') {
     return handleGetTrophyRole(message);
+  }
+
+  if (command === prefix + 'updateprofile') {
+    return handleUpdateMember(message);
   }
 }); 

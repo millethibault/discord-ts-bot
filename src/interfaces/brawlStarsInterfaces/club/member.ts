@@ -4,7 +4,7 @@ export interface Member {
   tag: string
   name: string
   nameColor: string
-  role: string
+  role: 'member' | 'senior' | 'vicePresident' | 'president'
   trophies: number
   icon: Icon
 }

@@ -1,6 +1,7 @@
 import connectionPromise from './index';
 import { Player } from '../interfaces/brawlStarsInterfaces/player';
 import { PlayerRow } from '../interfaces/player';
+import { Guild, User } from 'discord.js';
 
 export async function setProfile(userId: string, player: Player, guildId: string): Promise<void> {
   const pool = await connectionPromise;
@@ -11,11 +12,11 @@ export async function setProfile(userId: string, player: Player, guildId: string
   );
 }
 
-export async function getProfile(userId: string, guildId: string): Promise<PlayerRow | null> {
+export async function getProfile(user: User, guild: Guild): Promise<PlayerRow | null> {
   const pool = await connectionPromise;
   const [rows] = await pool.execute(
     'SELECT playerTag FROM player WHERE userId = ? AND guildId = ?',
-    [userId, guildId]
+    [user.id, guild.id]
   ) as [PlayerRow[], any];
 
   if (rows.length === 0) return null;

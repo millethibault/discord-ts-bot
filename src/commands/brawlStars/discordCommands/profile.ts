@@ -4,7 +4,7 @@ import { getProfile } from '../../../database/player';
 import { clearTag } from '../../../BrawlStarsInterfaces/Utils/tag';
 
 export async function handleGetProfile(message: Message<true>): Promise<Message<true>> {
-    const playerRow = await getProfile(message.author.id, message.guild.id);
+    const playerRow = await getProfile(message.author, message.guild);
     if(!playerRow) return message.channel.send(`Vous n'avez pas encore enregistré votre tag Brawl Stars ❌`);
     const playerTag = playerRow.playerTag;
     return bsapi.getPlayerData(playerTag)

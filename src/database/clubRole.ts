@@ -7,7 +7,9 @@ export async function setClubRole(guild: Guild, role: Role, club: Club): Promise
   const pool = await connectionPromise;
 
   await pool.execute(
-    'REPLACE INTO club (guildId, roleId, clubTag, clubName) VALUES (?, ?, ?, ?)',
+    `INSERT INTO club (guildId, roleId, clubTag, clubName)
+    VALUES (?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE roleId = VALUES(roleId), clubName = VALUES(clubName)`,
     [guild.id, role.id, club.tag, club.name]
   );
 }

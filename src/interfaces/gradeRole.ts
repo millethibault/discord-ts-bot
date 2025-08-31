@@ -1,7 +1,7 @@
 export interface gradeRoleRow {
   guildId: string;
-  presidentId?: string;
-  vicePresidentId?: string;
-  seniorId?: string;
-  memberId?: string;
+  president?: string;
+  vicePresident?: string;
+  senior?: string;
+  member?: string;
 }
