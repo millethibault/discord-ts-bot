@@ -1,4 +1,4 @@
-import { client } from '../client';
+/*import { client } from '../client';
 import { getPrefix } from '../../database/prefix';
 import { handleHello } from '../../commands/hello';
 import { handleSetPrefix } from '../../commands/setPrefix';
@@ -88,4 +88,4 @@ client.on('messageCreate', async message => {
   if (command === prefix + 'updateprofile') {
     return handleUpdateMember(message);
   }
-}); 
+}); */

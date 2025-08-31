@@ -1,20 +1,25 @@
-import { Guild, GuildMember, Message, Role } from 'discord.js';
+import { ChatInputCommandInteraction, Guild, GuildMember, Interaction, Message, Role, User } from 'discord.js';
 import { getProfile } from '../../../database/player';
 import { Player } from '../../../interfaces/brawlStarsInterfaces/player';
 import { getTrophyRole } from '../../../database/trophyRole';
 import { getGradeRoles } from '../../../database/gradeRole';
 import { getClub } from '../../../database/club';
-import { measureMemory } from 'vm';
 import bsapi from '../../../BrawlStarsInterfaces/brawl-stars-api';
 import { getClubRoles } from '../../../database/clubRole';
 
-export async function handleUpdateMember(message: Message<true>): Promise<Message<true>> {
-    const brawlProfile = await getProfile(message.author, message.guild);
-    if(!brawlProfile) return message.channel.send(`❌ Vous n'avez pas encore enregistré votre tag Brawl Stars.`);
+export async function handleUpdateMember(interaction: ChatInputCommandInteraction & { guild: Guild, member: GuildMember }): Promise<Message> {
+    const user = interaction.options.getUser('membre');
+    let member = interaction.member;
+    if(user) {
+        const fetchMember = interaction.guild.members.fetch(user.id);
+        if(!(fetchMember instanceof GuildMember)) return interaction.editReply(`❌ Membre introuvable.`);
+        member = fetchMember;
+    }
+
+    const brawlProfile = await getProfile(interaction.user, interaction.guild);
+    if(!brawlProfile) return interaction.editReply(`❌ Vous n'avez pas encore enregistré votre tag Brawl Stars.`);
     return bsapi.getPlayerData(brawlProfile.playerTag)
     .then(async player => {
-        if(!message.member) return message.channel.send(`❌ Membre discord non reconnu.`);
-        let member = message.member;
         const trophyRoleUpdated = await updateTrophyRole(member, player);
         member = await member.fetch();
         const gradeRoleUpdate = await updateGradeRole(member, player);
@@ -26,11 +31,11 @@ export async function handleUpdateMember(message: Message<true>): Promise<Messag
         if(gradeRoleUpdate) messageString += `Nouveau grade dans votre clan : <@&${gradeRoleUpdate.id}>\n`;
         if(clubRoleUpdated) messageString += `Nouveau clan rejoint : <@&${clubRoleUpdated.id}>\n`;
         if(!trophyRoleUpdated && !gradeRoleUpdate && !clubRoleUpdated) messageString += `Tous vos rôles étaient déjà à jour.`;
-        return message.channel.send(messageString);
+        return interaction.editReply(messageString);
     })
     .catch(err => {
         console.error(err);
-        return message.channel.send(`❌ Votre profil \`${brawlProfile.playerTag}\` n'a pas été trouvé sur Brawl Stars.`);
+        return interaction.editReply(`❌ Votre profil \`${brawlProfile.playerTag}\` n'a pas été trouvé sur Brawl Stars.`);
     });
 }
 
@@ -103,3 +108,15 @@ export async function updateClubRole(member: GuildMember, player: Player): Promi
     await member.roles.add(clubRole);
     return clubRole;
 }
+
+import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
+
+export const data = new SlashCommandBuilder()
+  .setName('updateprofile')
+  .setDescription('Met à jours les rôles discord d\'un membre en fonction de son profil Brawl Stars lié.')
+  .addUserOption(option => 
+    option.setName('membre')
+    .setDescription('Le membre à mettre à jour')
+    .setRequired(false)
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles);

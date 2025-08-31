@@ -1,21 +1,31 @@
-import { Message } from 'discord.js';
+import { ChatInputCommandInteraction, Guild, GuildMember, Message } from 'discord.js';
 import bsapi from '../../../BrawlStarsInterfaces/brawl-stars-api';
 import { setProfile } from '../../../database/player';
 import { clearTag } from '../../../BrawlStarsInterfaces/Utils/tag';
 
-export async function handleSetProfile(message: Message<true>): Promise<Message<true>> {
-    const args = message.content.split(/\s+/);
-    let playerTag = args[1];
-    if(!playerTag) return message.channel.send(`Veuillez entrer votre tag de joueur ❌`);
-    playerTag = clearTag(args[1]);
+export async function handleSetProfile(interaction: ChatInputCommandInteraction & { member: GuildMember, guild: Guild}): Promise<Message> {
+    let playerTag = interaction.options.getString('tag', true);
+    if(!playerTag) return interaction.editReply(`Veuillez entrer votre tag de joueur ❌`);
+    playerTag = clearTag(playerTag);
 
     return bsapi.getPlayerData(playerTag)
     .then(async player => {
-        await setProfile(message.author.id, player, message.guild.id);
-        return message.channel.send(`Votre profil Brawl Stars ${player.name} (\`${player.tag}\`) a été lié à votre profil discord sur ${message.guild.name} ✅`);
+        await setProfile(interaction.member.user.id, player, interaction.guild.id);
+        return interaction.editReply(`Votre profil Brawl Stars ${player.name} (\`${player.tag}\`) a été lié à votre profil discord sur ${interaction.guild.name} ✅`);
     })
     .catch(err => {
         console.log(err);
-        return message.channel.send(`Le tag de joueur \`${playerTag}\` n'a été trouvé sur Brawl Stars ❌`);
+        return interaction.editReply(`Le tag de joueur \`${playerTag}\` n'a été trouvé sur Brawl Stars ❌`);
     });
 }
+
+import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
+
+export const data = new SlashCommandBuilder()
+  .setName('setprofile')
+  .setDescription('Associe votre compte Brawl Stars à votre compte discord sur ce serveur.')
+  .addStringOption(option =>
+    option.setName('tag')
+      .setDescription('Votre tag de joueur, retrouvable sur votre profil Brawl Stars')
+      .setRequired(true)
+  )
