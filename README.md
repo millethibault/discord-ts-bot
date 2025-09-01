@@ -32,8 +32,8 @@ ssh root@IP_DU_VPS
 ``` 
 
 ```bash
-dockercompose down --remove-orphans
-dockercompose up -d
-dockercompose logs -f
-dockercompose up --build --force-recreate
+docker compose down --remove-orphans
+docker compose up -d
+docker compose logs -f
+docker compose up --build --force-recreate
 ```

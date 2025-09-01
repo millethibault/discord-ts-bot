@@ -11,11 +11,7 @@ import { getAutoRename } from '../../../database/autoRename';
 export async function handleUpdateMember(interaction: ChatInputCommandInteraction & { guild: Guild, member: GuildMember }): Promise<Message> {
     const user = interaction.options.getUser('membre');
     let member = interaction.member;
-    if(user) {
-        const fetchMember = interaction.guild.members.fetch(user.id);
-        if(!(fetchMember instanceof GuildMember)) return interaction.editReply(`❌ Membre introuvable.`);
-        member = fetchMember;
-    }
+    if(user) member = await interaction.guild.members.fetch(user.id);
 
     const brawlProfile = await getProfile(interaction.user, interaction.guild);
     if(!brawlProfile) return interaction.editReply(`❌ Vous n'avez pas encore enregistré votre tag Brawl Stars.`);
