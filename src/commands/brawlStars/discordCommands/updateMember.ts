@@ -114,7 +114,7 @@ export async function updateMemberName(member: GuildMember, player: Player): Pro
     if(!autoRename) return null;
     if(member.displayName == player.name) return null;
     await member.setNickname(player.name);
-    return member.player.name;
+    return player.name;
 }
 
 import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
