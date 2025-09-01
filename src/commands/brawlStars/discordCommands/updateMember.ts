@@ -17,8 +17,8 @@ export async function handleUpdateMember(interaction: ChatInputCommandInteractio
     let member = interaction.member;
     if(user) member = await interaction.guild.members.fetch(user.id);
     const oldNickname = member.displayName;
-    if(botMember.roles.highest.position <= member.roles.highest.position) return interaction.editReply(`❌ Je ne peux pas gérer les rôles de ${member.displayName} rôles car vous êtes ${interaction.member.roles.highest.name} !`);
-
+    if(botMember.roles.highest.position <= member.roles.highest.position) return interaction.editReply(`❌ Je ne peux pas gérer les rôles de ${member.displayName} rôles car il est ${interaction.member.roles.highest.name} !`);
+    if(interaction.member.roles.highest.position <= member.roles.highest.position) return interaction.editReply(`❌ Vous n'êtes pas autorisé à gérer les rôles de ${member.displayName} rôles car il est ${interaction.member.roles.highest.name} et vous êtes ${interaction.member.roles.highest.name} !`);
     const brawlProfile = await getProfile(interaction.user, interaction.guild);
     if(!brawlProfile) return interaction.editReply(`❌ ${member.displayName} n'avez pas encore enregistré votre tag Brawl Stars.`);
     return bsapi.getPlayerData(brawlProfile.playerTag)
@@ -56,9 +56,11 @@ export async function updateTrophyRole(member: GuildMember, player: Player, mess
     if(!trophyRole) return null;
 
     if(member.roles.cache.has(trophyRoleId)) return null;
-    
-    const rolesToRemove = member.roles.cache.filter(role => trophyRolesId.includes(role.id) && role.id !== trophyRoleId);
+    if(!client.user) return null;
+    const botMember = await member.guild.members.fetch(client.user.id);
+    const rolesToRemove = member.roles.cache.filter(role => trophyRolesId.includes(role.id) && role.id !== trophyRoleId && role.position < botMember.roles.highest.position);
     if(rolesToRemove.size > 0) await member.roles.remove(rolesToRemove);
+    if(trophyRole.position > botMember.roles.highest.position) return null;
     await member.roles.add(trophyRole);
 
     messageString += `Trophées mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${trophyRole.name}\n`;
@@ -86,14 +88,18 @@ export async function updateGradeRole(member: GuildMember, player: Player, messa
 
         const gradeRole = await member.guild.roles.fetch(gradeRoleId);
         if(!gradeRole) return null;
+        if(!client.user) return null;
+        const botMember = await member.guild.members.fetch(client.user.id);
 
         const rolesToRemove = member.roles.cache
             .filter(role => Object.entries(gradeRoles)
-                .filter(([key, value]) =>['president', 'vicePresident', 'senior', 'member'].includes(key) && value !== undefined)
+                .filter(([key, value]) =>['president', 'vicePresident', 'senior', 'member'].includes(key) && value !== undefined && role.position < botMember.roles.highest.position)
                 .map(([_, value]) => value as string).includes(role.id) && role.id !== gradeRole.id);
+
         if(rolesToRemove.size > 0) await member.roles.remove(rolesToRemove);
         if(member.roles.cache.has(gradeRole.id)) return null;
 
+        if(gradeRole.position > botMember.roles.highest.position) return null;
         await member.roles.add(gradeRole);
         messageString += `Grade mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${gradeRole.name}\n`;
         return gradeRole;
@@ -116,11 +122,14 @@ export async function updateClubRole(member: GuildMember, player: Player, messag
 
     const clubRole = await member.guild.roles.fetch(playerClub.roleId);
     if (!clubRole) return null;
+    if(!client.user) return null;
+    const botMember = await member.guild.members.fetch(client.user.id);
 
-    const rolesToRemove = member.roles.cache.filter(role => clubRoles.map(clubRole => clubRole.roleId).includes(role.id) && role.id !== clubRole.id);
+    const rolesToRemove = member.roles.cache.filter(role => clubRoles.map(clubRole => clubRole.roleId).includes(role.id) && role.id !== clubRole.id && role.position < botMember.roles.highest.position);
     if(rolesToRemove.size > 0) await member.roles.remove(rolesToRemove);
     if(member.roles.cache.has(clubRole.id)) return null;
 
+    if(clubRole.position > botMember.roles.highest.position) return null;
     await member.roles.add(clubRole);
     messageString += `Grade mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${clubRole.name}\n`;
     return clubRole;

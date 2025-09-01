@@ -19,6 +19,7 @@ import { handleUpdateMember, data as updateMemberData } from '../../commands/bra
 import { handleRemoveTrophyRole, data as removeTrophyRoleData, autocomplete as autocompleteRemoveTrophyRole } from '../../commands/brawlStars/discordCommands/removeTrophyRole';
 import { handleSetAutoRename, data as setAutoRenameData } from '../../commands/brawlStars/discordCommands/setAutoRename';
 import { handleGetAutoRename, data as getAutoRenameData } from '../../commands/brawlStars/discordCommands/getAutoRename';
+import { handleAudit, data as auditData } from '../../commands/brawlStars/discordCommands/audit';
 
 config();
 
@@ -38,7 +39,8 @@ const commands = [
     removeTrophyRoleData,
     updateMemberData,
     setAutoRenameData,
-    getAutoRenameData
+    getAutoRenameData,
+    auditData
 ].map(data => data.toJSON());
 const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
@@ -149,14 +151,13 @@ client.on('interactionCreate', async interaction => {
         return handleUpdateMember(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember, user: User });
     }
 
-
     if (interaction.commandName === 'setautorename') {
         return handleSetAutoRename(interaction as ChatInputCommandInteraction & { guild: Guild });
     }
 
 
-    if (interaction.commandName === 'getautorename') {
-        return handleGetAutoRename(interaction as ChatInputCommandInteraction & { guild: Guild });
+    if (interaction.commandName === 'audit') {
+        return handleAudit(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
     }
 
     return interaction.editReply(`La commande n'a pas été trouvée`);
