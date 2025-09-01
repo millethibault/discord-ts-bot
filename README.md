@@ -35,5 +35,5 @@ ssh root@IP_DU_VPS
 docker compose down --remove-orphans
 docker compose up -d
 docker compose logs -f
-docker compose up --build --force-recreate
+docker compose up --build --force-recreate -d
 ```
