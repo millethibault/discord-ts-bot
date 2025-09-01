@@ -6,6 +6,7 @@ import { getGradeRoles } from '../../../database/gradeRole';
 import { getClub } from '../../../database/club';
 import bsapi from '../../../BrawlStarsInterfaces/brawl-stars-api';
 import { getClubRoles } from '../../../database/clubRole';
+import { getAutoRename } from '../../../database/autoRename';
 
 export async function handleUpdateMember(interaction: ChatInputCommandInteraction & { guild: Guild, member: GuildMember }): Promise<Message> {
     const user = interaction.options.getUser('membre');
@@ -26,10 +27,13 @@ export async function handleUpdateMember(interaction: ChatInputCommandInteractio
         member = await member.fetch();
         const clubRoleUpdated = await updateClubRole(member, player);
         member = await member.fetch();
+        const memberNameUpdated = await updateMemberName(member, player);
+        member = await member.fetch();
         let messageString = `✅ Mise à jour de votre profil Discord effectuée\n`;
-        if(trophyRoleUpdated) messageString += `Nouveau palier de trophées atteint : <@&${trophyRoleUpdated.id}>\n`;
-        if(gradeRoleUpdate) messageString += `Nouveau grade dans votre clan : <@&${gradeRoleUpdate.id}>\n`;
-        if(clubRoleUpdated) messageString += `Nouveau clan rejoint : <@&${clubRoleUpdated.id}>\n`;
+        if(trophyRoleUpdated) messageString += `Trophées mis à jour : <@&${trophyRoleUpdated.id}>\n`;
+        if(gradeRoleUpdate) messageString += `Grade de club mis à jour : <@&${gradeRoleUpdate.id}>\n`;
+        if(clubRoleUpdated) messageString += `Club mis à jour : <@&${clubRoleUpdated.id}>\n`;
+        if(memberNameUpdated) messageString += `Pseudo mis à jour : <@&${memberNameUpdated}>\n`;
         if(!trophyRoleUpdated && !gradeRoleUpdate && !clubRoleUpdated) messageString += `Tous vos rôles étaient déjà à jour.`;
         return interaction.editReply(messageString);
     })
@@ -107,6 +111,14 @@ export async function updateClubRole(member: GuildMember, player: Player): Promi
 
     await member.roles.add(clubRole);
     return clubRole;
+}
+
+export async function updateMemberName(member: GuildMember, player: Player): Promise<string | null> {
+    const autoRename = await getAutoRename(member.guild)
+    if(!autoRename) return null;
+    if(member.displayName == player.name) return null;
+    await member.setNickname(player.name);
+    return member.displayName;
 }
 
 import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';

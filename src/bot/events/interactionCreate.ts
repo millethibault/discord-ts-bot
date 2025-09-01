@@ -1,7 +1,7 @@
 import { AutocompleteInteraction, ChatInputCommandInteraction, Guild, GuildMember, REST, Routes, User } from 'discord.js';
 import { config } from 'dotenv';
 import { error } from 'console';
-import { DISCORD_TOKEN, CLIENT_ID, GUILD_ID } from '../../config/env';
+import { DISCORD_TOKEN, CLIENT_ID, GUILD_ID, DEPLOY_COMMANDS } from '../../config/env';
 import { client } from '../client';
 import { handleBrawlerRanking, data as setBrawlerRankingData } from '../../commands/brawlStars/apiConnectionCommands/getBrawlerRanking';
 import { handleAddClub, data as addClubData } from '../../commands/brawlStars/discordCommands/addClub';
@@ -17,6 +17,8 @@ import { handleSetTrophyRole , data as setTrophyRoleData} from '../../commands/b
 import { handleGetTrophyRole, data as getTrophyRoleData } from '../../commands/brawlStars/discordCommands/getTrophyRole';
 import { handleUpdateMember, data as updateMemberData } from '../../commands/brawlStars/discordCommands/updateMember';
 import { handleRemoveTrophyRole, data as removeTrophyRoleData, autocomplete as autocompleteRemoveTrophyRole } from '../../commands/brawlStars/discordCommands/removeTrophyRole';
+import { handleSetAutoRename, data as setAutoRenameData } from '../../commands/brawlStars/discordCommands/setAutoRename';
+import { handleGetAutoRename, data as getAutoRenameData } from '../../commands/brawlStars/discordCommands/getAutoRename';
 
 config();
 
@@ -34,7 +36,9 @@ const commands = [
     setTrophyRoleData,
     getTrophyRoleData,
     removeTrophyRoleData,
-    updateMemberData
+    updateMemberData,
+    setAutoRenameData,
+    getAutoRenameData
 ].map(data => data.toJSON());
 const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
@@ -42,11 +46,25 @@ const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
   try {
     if(!CLIENT_ID) throw error;
     console.log('Déploiement des commandes...');
-    await rest.put(
-      Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
-      { body: commands }
-    );
-    console.log('✅ Commande déployées');
+    if(DEPLOY_COMMANDS == 'global') {
+        await rest.put(
+        Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+        { body: [] }
+        );
+        await rest.put(
+        Routes.applicationCommands(CLIENT_ID),
+        { body: commands }
+        );
+        console.log('✅ Commandes déployées en global');
+    }
+    else if(DEPLOY_COMMANDS == 'local') {
+        await rest.put(
+        Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+        { body: commands }
+        );
+        console.log('✅ Commandes déployées en local');
+    }
+    else console.log('❌ Comandes non déployées')
   } catch (error) {
     console.error('❌ Erreur de déploiement', error);
   }
@@ -129,6 +147,16 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.commandName === 'updateprofile') {
         return handleUpdateMember(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember, user: User });
+    }
+
+
+    if (interaction.commandName === 'setautorename') {
+        return handleSetAutoRename(interaction as ChatInputCommandInteraction & { guild: Guild });
+    }
+
+
+    if (interaction.commandName === 'getautorename') {
+        return handleGetAutoRename(interaction as ChatInputCommandInteraction & { guild: Guild });
     }
 
     return interaction.editReply(`La commande n'a pas été trouvée`);

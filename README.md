@@ -25,11 +25,15 @@ exit
 
 -----------------------
 
-Docker :
-
-Déployer : `docker-compose up --build -d`
-Logs : `docker-compose logs -f`
-
------------------------
-
 Connexion au serveur :
+
+```bash
+ssh root@IP_DU_VPS
+``` 
+
+```bash
+dockercompose down --remove-orphans
+dockercompose up -d
+dockercompose logs -f
+dockercompose up --build --force-recreate
+```
