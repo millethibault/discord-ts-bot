@@ -29,7 +29,7 @@ export async function handleUpdateMember(interaction: ChatInputCommandInteractio
         if(trophyRoleUpdated) messageString += `Trophées mis à jour : <@&${trophyRoleUpdated.id}>\n`;
         if(gradeRoleUpdate) messageString += `Grade de club mis à jour : <@&${gradeRoleUpdate.id}>\n`;
         if(clubRoleUpdated) messageString += `Club mis à jour : <@&${clubRoleUpdated.id}>\n`;
-        if(memberNameUpdated) messageString += `Pseudo mis à jour : <@&${memberNameUpdated}>\n`;
+        if(memberNameUpdated) messageString += `Pseudo mis à jour : ${memberNameUpdated}\n`;
         if(!trophyRoleUpdated && !gradeRoleUpdate && !clubRoleUpdated) messageString += `Tous vos rôles étaient déjà à jour.`;
         return interaction.editReply(messageString);
     })
@@ -114,7 +114,7 @@ export async function updateMemberName(member: GuildMember, player: Player): Pro
     if(!autoRename) return null;
     if(member.displayName == player.name) return null;
     await member.setNickname(player.name);
-    return member.displayName;
+    return member.player.name;
 }
 
 import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
