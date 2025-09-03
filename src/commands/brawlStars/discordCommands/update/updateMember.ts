@@ -1,13 +1,13 @@
 import { ChatInputCommandInteraction, Guild, GuildMember, Interaction, Message, Role, User } from 'discord.js';
-import { getProfile } from '../../../database/player';
-import { Player } from '../../../interfaces/brawlStarsInterfaces/player';
-import { getTrophyRole } from '../../../database/trophyRole';
-import { getGradeRoles } from '../../../database/gradeRole';
-import { getClub } from '../../../database/club';
-import bsapi from '../../../BrawlStarsInterfaces/brawl-stars-api';
-import { getClubRoles } from '../../../database/clubRole';
-import { getAutoRename } from '../../../database/autoRename';
-import { client } from '../../../bot/client';
+import { getProfile } from '../../../../database/player';
+import { Player } from '../../../../interfaces/brawlStarsInterfaces/player';
+import { getTrophyRole } from '../../../../database/trophyRole';
+import { getGradeRoles } from '../../../../database/gradeRole';
+import { getClub } from '../../../../database/club';
+import bsapi from '../../../../BrawlStarsInterfaces/brawl-stars-api';
+import { getClubRoles } from '../../../../database/clubRole';
+import { getAutoRename } from '../../../../database/autoRename';
+import { client } from '../../../../bot/client';
 
 export async function handleUpdateMember(interaction: ChatInputCommandInteraction & { guild: Guild, member: GuildMember }): Promise<Message> {
     if(!client.user) return interaction.editReply(`❌ Problème de synchronisation du bot`);
@@ -18,7 +18,7 @@ export async function handleUpdateMember(interaction: ChatInputCommandInteractio
     if(user) member = await interaction.guild.members.fetch(user.id);
     const oldNickname = member.displayName;
     if(botMember.roles.highest.position <= member.roles.highest.position) return interaction.editReply(`❌ Je ne peux pas gérer les rôles de ${member.displayName} rôles car il est ${interaction.member.roles.highest.name} !`);
-    if(interaction.member.roles.highest.position <= member.roles.highest.position) return interaction.editReply(`❌ Vous n'êtes pas autorisé à gérer les rôles de ${member.displayName} rôles car il est ${interaction.member.roles.highest.name} et vous êtes ${interaction.member.roles.highest.name} !`);
+    if(interaction.member.roles.highest.position <= member.roles.highest.position && member.user.id !== interaction.user.id) return interaction.editReply(`❌ Vous n'êtes pas autorisé à gérer les rôles de ${member.displayName} rôles car il est ${interaction.member.roles.highest.name} et vous êtes ${interaction.member.roles.highest.name} !`);
     const brawlProfile = await getProfile(interaction.user, interaction.guild);
     if(!brawlProfile) return interaction.editReply(`❌ ${member.displayName} n'avez pas encore enregistré votre tag Brawl Stars.`);
     return bsapi.getPlayerData(brawlProfile.playerTag)

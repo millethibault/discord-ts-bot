@@ -1,3 +1,4 @@
+import { ResultSetHeader } from 'mysql2';
 import { gradeRoleRow } from '../interfaces/gradeRole';
 import connectionPromise from './index';
 import { Guild, Role } from 'discord.js';
@@ -55,4 +56,18 @@ export async function getGradeRoles(guild: Guild): Promise<gradeRoleRow | undefi
   ) as [gradeRoleRow[], any];
 
   return rows[0];
+}
+
+
+
+export async function removeGrade(guild: Guild, gradeToRemove:string): Promise<number> {
+  const pool = await connectionPromise;
+  const allowedGrades = ['president', 'vicePresident', 'senior', 'member'];
+
+  if (!allowedGrades.includes(gradeToRemove)) {
+    throw new Error(`Grade "${gradeToRemove}" invalide.`);
+  }
+  const query = `UPDATE gradeRole SET ${gradeToRemove} = NULL WHERE guildId = ? AND ${gradeToRemove} IS NOT NULL`;
+  const [result] = await pool.execute<ResultSetHeader>(query, [guild.id]);
+  return result.affectedRows;
 }

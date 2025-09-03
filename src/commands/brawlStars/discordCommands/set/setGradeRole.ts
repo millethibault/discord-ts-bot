@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, Guild, Interaction, Message, Role } from 'discord.js';
-import { setMember, setPresident, setSenior, setVicePresident } from '../../../database/gradeRole';
+import { setMember, setPresident, setSenior, setVicePresident } from '../../../../database/gradeRole';
 
 export async function handleSetGradeRole(interaction: ChatInputCommandInteraction & { guild: Guild }): Promise<Message> {
     const grade = interaction.options.getString('grade', true);
@@ -31,26 +31,3 @@ export async function handleSetMember(interaction: ChatInputCommandInteraction &
     await setMember(interaction.guild, role);
     return interaction.editReply(`Le grade Membre a été associé au rôle ${role.name} ✅`);
 }
-
-import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
-
-export const data = new SlashCommandBuilder()
-  .setName('setgraderole')
-  .setDescription('Définit les rôles discord que vous associez aux grades des membres de vos clans.')
-  .addStringOption(option =>
-    option.setName('grade')
-      .setDescription('Le grade à associer à un rôle discord')
-      .setRequired(true)
-      .setChoices(
-        {name: 'Président', value: 'president'},
-        {name: 'Vice-Président', value: 'vicePresident'},
-        {name: 'Sénior', value: 'senior'},
-        {name: 'Membre', value: 'member'},
-    )
-  )
-  .addRoleOption(option => 
-    option.setName('role')
-    .setDescription('Le rôle à attribuer')
-    .setRequired(true)
-  )
-  .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
