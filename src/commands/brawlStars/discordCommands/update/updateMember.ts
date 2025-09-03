@@ -19,7 +19,7 @@ export async function handleUpdateMember(interaction: ChatInputCommandInteractio
     const oldNickname = member.displayName;
     if(botMember.roles.highest.position <= member.roles.highest.position) return interaction.editReply(`❌ Je ne peux pas gérer les rôles de ${member.displayName} rôles car il est ${interaction.member.roles.highest.name} !`);
     if(interaction.member.roles.highest.position <= member.roles.highest.position && member.user.id !== interaction.user.id) return interaction.editReply(`❌ Vous n'êtes pas autorisé à gérer les rôles de ${member.displayName} rôles car il est ${interaction.member.roles.highest.name} et vous êtes ${interaction.member.roles.highest.name} !`);
-    const brawlProfile = await getProfile(interaction.user, interaction.guild);
+    const brawlProfile = await getProfile(member.user, interaction.guild);
     if(!brawlProfile) return interaction.editReply(`❌ ${member.displayName} n'avez pas encore enregistré votre tag Brawl Stars.`);
     return bsapi.getPlayerData(brawlProfile.playerTag)
     .then(async player => {
