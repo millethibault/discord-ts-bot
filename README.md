@@ -25,7 +25,9 @@ exit
 
 -----------------------
 
-Connexion au serveur :
+Serveur :
+
+Commandes utiles :
 
 ```bash
 ssh root@IP_DU_VPS
@@ -37,3 +39,17 @@ docker compose up -d
 docker compose logs -f
 docker compose up --build --force-recreate -d
 ```
+Pour déployer en prod : 
+```bash
+git pull
+npm run
+docker compose up --build --force-recreate -d
+docker compose logs -f
+```
+
+-----------------------
+
+lancer le site 
+cd my-docs
+npm run start
+et node auth-server.js
