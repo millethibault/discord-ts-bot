@@ -151,10 +151,13 @@ client.on('interactionCreate', async interaction => {
         return handleUpdateMember(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember, user: User });
     }
 
+    if (interaction.commandName === 'getautorename') {
+        return handleGetAutoRename(interaction as ChatInputCommandInteraction & { guild: Guild });
+    }
+
     if (interaction.commandName === 'setautorename') {
         return handleSetAutoRename(interaction as ChatInputCommandInteraction & { guild: Guild });
     }
-
 
     if (interaction.commandName === 'audit') {
         return handleAudit(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
