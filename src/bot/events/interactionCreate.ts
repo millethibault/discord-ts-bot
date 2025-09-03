@@ -42,6 +42,10 @@ const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
     if(DEPLOY_COMMANDS == 'global') {
         await rest.put(
         Routes.applicationCommands(CLIENT_ID),
+        { body: [] }
+        );
+        await rest.put(
+        Routes.applicationCommands(CLIENT_ID),
         { body: commands }
         );
         console.log('✅ Commandes déployées en global');
