@@ -2,16 +2,21 @@ import { ChatInputCommandInteraction, Guild, GuildMember, Message } from 'discor
 import bsapi from '../../../../BrawlStarsInterfaces/brawl-stars-api';
 import { setProfile } from '../../../../database/player';
 import { clearTag } from '../../../../BrawlStarsInterfaces/Utils/tag';
+import { checkRoleConditions } from '../../../../utils/checkPerms';
 
 export async function handleSetProfile(interaction: ChatInputCommandInteraction & { member: GuildMember, guild: Guild}): Promise<Message> {
     let playerTag = interaction.options.getString('tag', true);
-    if(!playerTag) return interaction.editReply(`Veuillez entrer votre tag de joueur ❌`);
+    let user = interaction.options.getUser('membre', false);
+    if(!user) user = interaction.member.user;
+
+    const [permission, errorString] = await checkRoleConditions(interaction, false)
+    if(!permission) return interaction.editReply(errorString);
     playerTag = clearTag(playerTag);
 
     return bsapi.getPlayerData(playerTag)
     .then(async player => {
-        await setProfile(interaction.member.user.id, player, interaction.guild.id);
-        return interaction.editReply(`Votre profil Brawl Stars ${player.name} (\`${player.tag}\`) a été lié à votre profil discord sur ${interaction.guild.name} ✅`);
+        await setProfile(user.id, player, interaction.guild.id);
+        return interaction.editReply(`Le profil Brawl Stars ${player.name} (\`${player.tag}\`) a été lié à au profil discord de ${user.displayName} sur ${interaction.guild.name} ✅`);
     })
     .catch(err => {
         console.log(err);

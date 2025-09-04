@@ -25,10 +25,15 @@ export const data = new SlashCommandBuilder()
   )
   .addSubcommand(sub => sub
     .setName('profile')
-    .setDescription('Affiche votre profile Brawl Stars ou celui de quelqu\'un d\'autre.')
+    .setDescription('Affiche votre profil Brawl Stars ou celui d\'un autre membre.')
     .addStringOption(option => 
       option.setName('tag')
       .setDescription('Le tag du joueur Brawl Stars')
       .setRequired(false)
+    )
+    .addUserOption(option => 
+      option.setName('membre')
+        .setDescription('Le membre discord')
+        .setRequired(false)
     )
   )

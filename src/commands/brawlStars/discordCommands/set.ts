@@ -42,8 +42,13 @@ export const data = new SlashCommandBuilder()
     .setDescription('Associe votre compte Brawl Stars à votre compte discord sur ce serveur.')
     .addStringOption(option =>
       option.setName('tag')
-        .setDescription('Votre tag de joueur, retrouvable sur votre profil Brawl Stars')
+        .setDescription('Le tag de joueur, retrouvable sur votre profil Brawl Stars')
         .setRequired(true)
+    )
+    .addUserOption(option => 
+      option.setName('membre')
+        .setDescription('Le membre auquel lier le profil Brawl Stars')
+        .setRequired(false)
     )
   )
   .addSubcommand(sub =>

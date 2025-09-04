@@ -8,22 +8,21 @@ import bsapi from '../../../../BrawlStarsInterfaces/brawl-stars-api';
 import { getClubRoles } from '../../../../database/clubRole';
 import { getAutoRename } from '../../../../database/autoRename';
 import { client } from '../../../../bot/client';
-
+type MessageString = { value: string };
 export async function handleUpdateMember(interaction: ChatInputCommandInteraction & { guild: Guild, member: GuildMember }): Promise<Message> {
-    if(!client.user) return interaction.editReply(`❌ Problème de synchronisation du bot`);
-    const botMember = await interaction.guild.members.fetch(client.user.id);
-    if(!botMember.permissions.has('ManageRoles')) return interaction.editReply(`❌ Je n'ai pas la permission d'attribuer des rôles sur ce serveur !`);
-    const user = interaction.options.getUser('membre');
     let member = interaction.member;
+    const user = interaction.options.getUser('membre');
     if(user) member = await interaction.guild.members.fetch(user.id);
+
+    const [permission, errorString] = await checkRoleConditions(interaction)
+    if(!permission) return interaction.editReply(errorString);
     const oldNickname = member.displayName;
-    if(botMember.roles.highest.position <= member.roles.highest.position) return interaction.editReply(`❌ Je ne peux pas gérer les rôles de ${member.displayName} rôles car il est ${interaction.member.roles.highest.name} !`);
-    if(interaction.member.roles.highest.position <= member.roles.highest.position && member.user.id !== interaction.user.id) return interaction.editReply(`❌ Vous n'êtes pas autorisé à gérer les rôles de ${member.displayName} rôles car il est ${interaction.member.roles.highest.name} et vous êtes ${interaction.member.roles.highest.name} !`);
+
     const brawlProfile = await getProfile(member.user, interaction.guild);
-    if(!brawlProfile) return interaction.editReply(`❌ ${member.displayName} n'avez pas encore enregistré votre tag Brawl Stars.`);
+    if(!brawlProfile) return interaction.editReply(`❌ ${member.displayName} n'a pas encore enregistré votre tag Brawl Stars.`);
     return bsapi.getPlayerData(brawlProfile.playerTag)
     .then(async player => {
-        let messageString = `✅ Mise à jour du profil Discord effectuée\n`;
+        let messageString = { value:`✅ Mise à jour du profil Discord effectuée\n`};
         const trophyRoleUpdated = await updateTrophyRole(member, player, messageString);
         member = await member.fetch();
         const gradeRoleUpdate = await updateGradeRole(member, player, messageString);
@@ -32,9 +31,9 @@ export async function handleUpdateMember(interaction: ChatInputCommandInteractio
         member = await member.fetch();
         const memberNameUpdated = await updateMemberName(member, player, messageString);
         member = await member.fetch();
-        if(!trophyRoleUpdated && !gradeRoleUpdate && !clubRoleUpdated) messageString += `Tous les rôles de ${oldNickname} étaient déjà à jour.\n`;
-        if (memberNameUpdated) messageString += `Pseudo sur le serveur : ${oldNickname} ➡️ ${memberNameUpdated}`;
-        return interaction.editReply(messageString);
+        if(!trophyRoleUpdated && !gradeRoleUpdate && !clubRoleUpdated) messageString.value += `Tous les rôles de ${oldNickname} étaient déjà à jour.\n`;
+        if (memberNameUpdated) messageString.value += `Pseudo sur le serveur : ${oldNickname} ➡️ ${memberNameUpdated}`;
+        return interaction.editReply(messageString.value);
     })
     .catch(err => {
         console.error(err);
@@ -42,10 +41,10 @@ export async function handleUpdateMember(interaction: ChatInputCommandInteractio
     });
 }
 
-export async function updateTrophyRole(member: GuildMember, player: Player, messageString: string): Promise<Role | null> {
+export async function updateTrophyRole(member: GuildMember, player: Player, messageString: MessageString): Promise<Role | null> {
     const trophyRoles = await getTrophyRole(member.guild);
     if(!trophyRoles[0]) {
-        messageString +=  `Aucun rôle de trophées n'a été créé sur ce serveur.\,`;
+        messageString.value +=  `Aucun rôle de trophées n'a été créé sur ce serveur.\,`;
         return null;
     };
     const trophyRolesId = trophyRoles.map(trophyRole => trophyRole.roleId)
@@ -63,14 +62,14 @@ export async function updateTrophyRole(member: GuildMember, player: Player, mess
     if(trophyRole.position > botMember.roles.highest.position) return null;
     await member.roles.add(trophyRole);
 
-    messageString += `Trophées mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${trophyRole.name}\n`;
+    messageString.value += `Trophées mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${trophyRole.name}\n`;
     return trophyRole;
 }
 
-export async function updateGradeRole(member: GuildMember, player: Player, messageString: string): Promise<Role | null> {
+export async function updateGradeRole(member: GuildMember, player: Player, messageString: MessageString): Promise<Role | null> {
     const gradeRoles = await getGradeRoles(member.guild);
     if(!gradeRoles) {
-        messageString +=  `Aucun rôle de grade n'a été créé sur ce serveur.\,`;
+        messageString.value +=  `Aucun rôle de grade n'a été créé sur ce serveur.\,`;
         return null;
     };
 
@@ -101,7 +100,7 @@ export async function updateGradeRole(member: GuildMember, player: Player, messa
 
         if(gradeRole.position > botMember.roles.highest.position) return null;
         await member.roles.add(gradeRole);
-        messageString += `Grade mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${gradeRole.name}\n`;
+        messageString.value += `Grade mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${gradeRole.name}\n`;
         return gradeRole;
     })
     .catch(err => {
@@ -110,10 +109,10 @@ export async function updateGradeRole(member: GuildMember, player: Player, messa
     });
 }
 
-export async function updateClubRole(member: GuildMember, player: Player, messageString: string): Promise<Role | null> {
+export async function updateClubRole(member: GuildMember, player: Player, messageString: MessageString): Promise<Role | null> {
     const clubRoles = await getClubRoles(member.guild);
     if(!clubRoles[0]) {
-        messageString +=  `Aucun rôle de grade n'a été créé sur ce serveur.\,`;
+        messageString.value +=  `Aucun rôle de grade n'a été créé sur ce serveur.\,`;
         return null;
     };
 
@@ -131,11 +130,11 @@ export async function updateClubRole(member: GuildMember, player: Player, messag
 
     if(clubRole.position > botMember.roles.highest.position) return null;
     await member.roles.add(clubRole);
-    messageString += `Grade mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${clubRole.name}\n`;
+    messageString.value += `Grade mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${clubRole.name}\n`;
     return clubRole;
 }
 
-export async function updateMemberName(member: GuildMember, player: Player, messageString: string): Promise<string | null> {
+export async function updateMemberName(member: GuildMember, player: Player, messageString: MessageString): Promise<string | null> {
     const autoRename = await getAutoRename(member.guild);
     if(!autoRename) return null;
     if(member.displayName == player.name) return null;
@@ -144,6 +143,7 @@ export async function updateMemberName(member: GuildMember, player: Player, mess
 }
 
 import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
+import { checkRoleConditions } from '../../../../utils/checkPerms';
 
 export const data = new SlashCommandBuilder()
   .setName('updateprofile')

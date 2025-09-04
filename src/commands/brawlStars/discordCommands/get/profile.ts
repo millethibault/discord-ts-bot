@@ -1,23 +1,33 @@
 import { ChatInputCommandInteraction, Guild, GuildMember, Message } from 'discord.js';
 import bsapi from '../../../../BrawlStarsInterfaces/brawl-stars-api';
 import { getProfile } from '../../../../database/player';
-import { clearTag } from '../../../../BrawlStarsInterfaces/Utils/tag';
+import { checkRoles } from '../../../../utils/checkRoles';
 
 export async function handleGetProfile(interaction: ChatInputCommandInteraction & { member: GuildMember, guild: Guild}): Promise<Message> {
     let playerTag = interaction.options.getString('tag', false);
+    let user = interaction.options.getUser('membre', false);
+    if(!user) user = interaction.member.user;
+    const member = await interaction.guild.members.fetch(user.id);
+    if(!member) return interaction.editReply(`❌ Membre introuvable`);
     if(!playerTag) {
-        const playerRow = await getProfile(interaction.member.user, interaction.guild);
-        if(!playerRow) return interaction.editReply(`Vous n'avez pas encore enregistré votre tag Brawl Stars ❌`);
+        const playerRow = await getProfile(user, interaction.guild);
+        if(!playerRow || !playerRow.playerTag) return interaction.editReply(`❌ ${member.displayName} n'a pas encore enregistré son tag Brawl Stars`);
         playerTag = playerRow.playerTag;
     }
-    if(!playerTag) return interaction.editReply(`Veuillez indiquer le tag d'un joueur Brawl Stars ❌`);
     
     return bsapi.getPlayerData(playerTag)
     .then(async player => {
-        return interaction.editReply(`Votre profil lié à votre compte sur ${interaction.guild.name} est ${player.name} (\`${player.tag}\`).\n Bien joué pour vos ${player.trophies}🏆`);
+        const checkedRoles = await checkRoles(member, player);
+        let messageString = `Le profil Brawl Stars lié à ${member.displayName} sur ${interaction.guild.name} est ${player.name} (\`${player.tag}\`).\n`;
+        if(checkedRoles.trophies.trophyRole) messageString += `${player.trophies}🏆 -> ${checkedRoles.trophies.upToDate ? `✅` : `❎`} ${checkedRoles.trophies.trophyRole} ${checkedRoles.trophies.trophyRolesToRemove.map(role => `~~${role[1].name}~~`).join(', ')}\n`;
+        if(checkedRoles.club.expectedClubRole) messageString += `Club : ${player.club.name} (\`#${player.club.tag}\`) -> ${checkedRoles.club.upToDate ? `✅` : `❎`} ${checkedRoles.club.expectedClubRole} ${checkedRoles.club.clubRolesToRemove.map(role => `~~${role[1].name}~~`).join(', ')}\n`;
+        if(checkedRoles.grade.expectedGradeRole) messageString += `Grade : ${checkedRoles.grade.grade} -> ${checkedRoles.grade.upToDate ? `✅` : `❎`} ${checkedRoles.grade.expectedGradeRole} ${checkedRoles.grade.gradeRolesToRemove.map(role => `~~${role.name}~~`).join(', ')}\n`;
+        if(!checkedRoles.rolesUpToDate && interaction.user.id == user.id) messageString += `Pensez à mettre vos rôles à jour 😉.`
+        else if(interaction.user.id == user.id) messageString += `Votre profil est à jour ${checkedRoles.nickname.upToDate ? `` : `(sauf le pseudo)`} 😉.`;
+        return interaction.editReply(messageString);
     })
     .catch(err => {
         console.log(err);
-        return interaction.editReply(`Le tag de joueur \`${playerTag}\` n'a été trouvé sur Brawl Stars ❌`);
+        return interaction.editReply(`❌ Le tag de joueur \`${playerTag}\` n'a pas été trouvé sur Brawl Stars`);
     });
 }
