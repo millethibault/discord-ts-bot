@@ -1,5 +1,6 @@
 import { CommandInteraction, Client, GuildMember, ChatInputCommandInteraction } from 'discord.js';
 import { client } from '../bot/client';
+import { getVerify } from '../database/verify';
 
 type CheckResult = [boolean, string];
 
@@ -9,9 +10,7 @@ export async function checkRoleConditions(
   hardCheck: boolean=true,
   updateAll: boolean=false
 ): Promise<CheckResult> {
-  if (!member.guild) {
-    return [false, "❌ Cette commande doit être utilisée dans un serveur."];
-  }
+  if (!member.guild) return [false, "❌ Cette commande doit être utilisée dans un serveur."]
   if(!client.user) return [false, "❌ Problème de synchronisation du bot"];
 
   // Récupère le bot en tant que membre du serveur

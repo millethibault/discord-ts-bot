@@ -3,9 +3,13 @@ import { SlashCommandBuilder } from "discord.js";
 export const data = new SlashCommandBuilder()
   .setName('get')
   .setDescription('Récupérer des paramètres')
-  .addSubcommandGroup(sub => sub
+  .addSubcommand(sub => sub
     .setName('autorename')
     .setDescription('Indique si le bot renomme automatiquement les membres ors de la mise à jour sur ce serveur.')
+  )
+  .addSubcommand(sub => sub
+    .setName('verify')
+    .setDescription('Indique si les modérateurs doivent vérifier les membres lorsqu\'ils s\'enregistrent sur le serveur.')
   )
   .addSubcommand(sub => sub
     .setName('clubroles')

@@ -38,25 +38,6 @@ export const data = new SlashCommandBuilder()
     )
   )
   .addSubcommand(sub =>
-    sub.setName('profile')
-    .setDescription('Associe votre compte Brawl Stars à votre compte discord sur ce serveur.')
-    .addStringOption(option =>
-      option.setName('tag')
-        .setDescription('Le tag de joueur, retrouvable sur votre profil Brawl Stars')
-        .setRequired(false)
-    )
-    .addUserOption(option => 
-      option.setName('membre')
-        .setDescription('Le membre auquel lier le profil Brawl Stars')
-        .setRequired(false)
-    )
-    .addAttachmentOption(option => 
-      option.setName('qrcode')
-      .setDescription('Une photo du QR code de votre profil')
-      .setRequired(false)
-    )
-  )
-  .addSubcommand(sub =>
     sub.setName('clubrole')
     .setDescription('Définit un rôle discord que vous associez aux membres d\'un de vos club.')
     .addStringOption(option =>
@@ -75,6 +56,15 @@ export const data = new SlashCommandBuilder()
     .setDescription('Active/désactive le renommage automatique des membres lors de leurs mises à jour.')
     .addBooleanOption(option =>
       option.setName('rename')
+        .setDescription('Activer / Désactiver')
+        .setRequired(false)
+    )
+  )
+  .addSubcommand(sub =>
+    sub.setName('verify')
+    .setDescription('Active/désactive la vérification des modérateurs avant qu\'un membre n\'ajoute son profil.')
+    .addBooleanOption(option =>
+      option.setName('verify')
         .setDescription('Activer / Désactiver')
         .setRequired(false)
     )

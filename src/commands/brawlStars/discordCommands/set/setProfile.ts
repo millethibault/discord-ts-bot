@@ -4,8 +4,10 @@ import { setProfile } from '../../../../database/player';
 import { clearTag } from '../../../../BrawlStarsInterfaces/Utils/tag';
 import { checkRoleConditions } from '../../../../utils/checkPerms';
 import { readQRCodeFromUrl, getTagValueFromLink } from '../../../../utils/readCodeQr';
+import { getVerify } from '../../../../database/verify';
+import { handleLink } from '../../../../utils/handleValidation';
 
-export async function handleSetProfile(interaction: ChatInputCommandInteraction & { member: GuildMember, guild: Guild}): Promise<Message> {
+export async function handleLinkProfile(interaction: ChatInputCommandInteraction & { member: GuildMember, guild: Guild}): Promise<Message> {
     let playerTag = interaction.options.getString('tag', false);
     let user = interaction.options.getUser('membre', false);
     let attachment = interaction.options.getAttachment('qrcode', false);
@@ -24,10 +26,7 @@ export async function handleSetProfile(interaction: ChatInputCommandInteraction 
     playerTag = clearTag(playerTag);
 
     return bsapi.getPlayerData(playerTag)
-    .then(async player => {
-        await setProfile(user.id, player, interaction.guild.id);
-        return interaction.editReply(`Le profil Brawl Stars ${player.name} (\`${player.tag}\`) a été lié à au profil discord de ${user.displayName} sur ${interaction.guild.name} ✅`);
-    })
+    .then(player => handleLink(interaction, user, player))
     .catch(err => {
         console.log(err);
         return interaction.editReply(`❌ Le tag de joueur \`${playerTag}\` n'a été trouvé sur Brawl Stars`);
