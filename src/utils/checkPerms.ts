@@ -21,7 +21,7 @@ export async function checkRoleConditions(
   }
 
   // Vérifie la hiérarchie des rôles du bot vs. membre ciblé
-  if (botMember.roles.highest.position <= member.roles.highest.position && !updateAll) {
+  if (botMember.roles.highest.position <= member.roles.highest.position && hardCheck && !updateAll) {
     return [
       false,
       `❌ Je ne peux pas gérer ${member.displayName} car son rôle est trop élevé (${member.roles.highest.name}).`

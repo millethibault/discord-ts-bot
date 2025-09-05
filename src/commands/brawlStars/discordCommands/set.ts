@@ -43,12 +43,17 @@ export const data = new SlashCommandBuilder()
     .addStringOption(option =>
       option.setName('tag')
         .setDescription('Le tag de joueur, retrouvable sur votre profil Brawl Stars')
-        .setRequired(true)
+        .setRequired(false)
     )
     .addUserOption(option => 
       option.setName('membre')
         .setDescription('Le membre auquel lier le profil Brawl Stars')
         .setRequired(false)
+    )
+    .addAttachmentOption(option => 
+      option.setName('qrcode')
+      .setDescription('Une photo du QR code de votre profil')
+      .setRequired(false)
     )
   )
   .addSubcommand(sub =>
