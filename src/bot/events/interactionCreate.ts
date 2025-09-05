@@ -1,4 +1,4 @@
-import { AutocompleteInteraction, ChatInputCommandInteraction, Guild, GuildChannel, GuildMember, REST, Routes, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder, User } from 'discord.js';
+import { AutocompleteInteraction, ChatInputCommandInteraction, Guild, GuildChannel, GuildMember, REST, Routes, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder, StringSelectMenuInteraction, User } from 'discord.js';
 import { config } from 'dotenv';
 import { error } from 'console';
 import { DISCORD_TOKEN, CLIENT_ID, GUILD_ID, DEPLOY_COMMANDS } from '../../config/env';
@@ -30,6 +30,8 @@ import { handleSetVerify } from '../../commands/brawlStars/discordCommands/set/s
 import { handleGetVerify } from '../../commands/brawlStars/discordCommands/get/getVerify';
 import { handleLinkProfile, data as linkData } from '../../commands/brawlStars/discordCommands/link';
 import { handleUnlinkProfile, data as unlinkData } from '../../commands/brawlStars/discordCommands/unlink';
+import { changeHelpCommand, handleHelpCommand } from '../../commands/brawlStars/discordCommands/help';
+import { data as helpData } from '../../commands/brawlStars/discordCommands/help/data';
 
 
 config();
@@ -41,7 +43,8 @@ const commands = [
     removeData,
     updateData,
     linkData,
-    unlinkData
+    unlinkData,
+    helpData
 ].map(data => data.toJSON());
 const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
@@ -63,10 +66,6 @@ const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
     else if(DEPLOY_COMMANDS == 'local') {
         await rest.put(
         Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
-        { body: [] }
-        );
-        await rest.put(
-        Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
         { body: commands }
         );
         console.log('✅ Commandes déployées en local');
@@ -79,24 +78,22 @@ const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
 client.on('interactionCreate', async interaction => {
     
+  if (interaction.isStringSelectMenu()) {
+  
+    const menu = interaction as StringSelectMenuInteraction;
+    if(!(interaction.guild instanceof Guild)) return;
+    if(!(interaction.member instanceof GuildMember)) return;
+    if(interaction.customId === 'help_menu') return changeHelpCommand(menu as StringSelectMenuInteraction & { guild: Guild, member: GuildMember});
+  }
+
   if (interaction.isAutocomplete()) {
     const auto = interaction as AutocompleteInteraction;
     const sub = interaction.options.getSubcommand();
+    if(!(interaction.guild instanceof Guild)) return;
 
-    if (auto.commandName === 'remove' && sub === 'club') {
-        if(!(interaction.guild instanceof Guild)) return;
-        return autocompleteGuildClubStrings(auto as AutocompleteInteraction & { guild: Guild});
-    }
-
-    if (auto.commandName === 'update' && sub === 'club') {
-        if(!(interaction.guild instanceof Guild)) return;
-        return autocompleteGuildClubStrings(auto as AutocompleteInteraction & { guild: Guild});
-    }
-
-    if (auto.commandName === 'removetrophyrole') {
-        if(!(interaction.guild instanceof Guild)) return;
-        return autocompleteRemoveTrophyRole(auto as AutocompleteInteraction & { guild: Guild});
-    }
+    if (auto.commandName === 'remove' && sub === 'club') return autocompleteGuildClubStrings(auto as AutocompleteInteraction & { guild: Guild});
+    if (auto.commandName === 'update' && sub === 'club') return autocompleteGuildClubStrings(auto as AutocompleteInteraction & { guild: Guild});
+    if (auto.commandName === 'removetrophyrole') return autocompleteRemoveTrophyRole(auto as AutocompleteInteraction & { guild: Guild});
   }
 
   if (interaction.isChatInputCommand()) try {
@@ -110,8 +107,9 @@ client.on('interactionCreate', async interaction => {
     const group = interaction.commandName;
 
     if (interaction.commandName === 'audit') return handleAudit(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
-    if (interaction.commandName === 'link') return handleLinkProfile(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
+    if (interaction.commandName === 'link') return handleLinkProfile(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember, channel: GuildChannel });
     if (interaction.commandName === 'unlink') return handleUnlinkProfile(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
+    if (interaction.commandName === 'help') return handleHelpCommand(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
     const sub = interaction.options.getSubcommand();
 
     if(group === 'set') {

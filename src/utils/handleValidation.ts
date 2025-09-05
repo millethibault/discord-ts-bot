@@ -8,12 +8,13 @@ import {
   Guild,
   User,
   GuildMember,
+  GuildChannel,
 } from 'discord.js';
 import { getVerify } from '../database/verify';
 import { link } from '../database/player';
 import { Player } from '../interfaces/brawlStarsInterfaces/player';
 
-export async function handleLink(interaction: ChatInputCommandInteraction & {guild: Guild, member: GuildMember}, user: User, player: Player) {
+export async function handleLink(interaction: ChatInputCommandInteraction & {guild: Guild, member: GuildMember, channel: GuildChannel}, user: User, player: Player) {
   const verify = await getVerify(interaction.guild);
 
   if (!verify || interaction.member.permissions.has('ManageRoles')) {
@@ -41,7 +42,7 @@ export async function handleLink(interaction: ChatInputCommandInteraction & {gui
   });
 
   try {
-    const confirmation = await interaction.channel?.awaitMessageComponent({
+    const confirmation = await interaction.channel.awaitMessageComponent({
       componentType: ComponentType.Button,
       time: 24 * 3600 * 1000, // 24h
       filter: (i) =>

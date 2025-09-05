@@ -1,11 +1,11 @@
-import { ChatInputCommandInteraction, Guild, GuildMember, Message } from 'discord.js';
+import { ChatInputCommandInteraction, Guild, GuildChannel, GuildMember, Message } from 'discord.js';
 import bsapi from '../../../BrawlStarsInterfaces/brawl-stars-api';
 import { clearTag } from '../../../BrawlStarsInterfaces/Utils/tag';
 import { checkRoleConditions } from '../../../utils/checkPerms';
 import { readQRCodeFromUrl, getTagValueFromLink } from '../../../utils/readCodeQr';
 import { handleLink } from '../../../utils/handleValidation';
 
-export async function handleLinkProfile(interaction: ChatInputCommandInteraction & { member: GuildMember, guild: Guild}): Promise<Message> {
+export async function handleLinkProfile(interaction: ChatInputCommandInteraction & { member: GuildMember, guild: Guild, channel: GuildChannel}): Promise<Message> {
     let playerTag = interaction.options.getString('tag', false);
     let user = interaction.options.getUser('membre', false);
     let attachment = interaction.options.getAttachment('qrcode', false);
