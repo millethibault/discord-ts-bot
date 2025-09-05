@@ -10,14 +10,14 @@ import {
   GuildMember,
 } from 'discord.js';
 import { getVerify } from '../database/verify';
-import { setProfile } from '../database/player';
+import { link } from '../database/player';
 import { Player } from '../interfaces/brawlStarsInterfaces/player';
 
 export async function handleLink(interaction: ChatInputCommandInteraction & {guild: Guild, member: GuildMember}, user: User, player: Player) {
   const verify = await getVerify(interaction.guild);
 
   if (!verify || interaction.member.permissions.has('ManageRoles')) {
-    await setProfile(user.id, player, interaction.guild.id);
+    await link(user, player, interaction.guild);
     return interaction.editReply(
       `Le profil Brawl Stars ${player.name} (\`${player.tag}\`) a été lié au profil Discord de ${user.displayName} sur ${interaction.guild.name} ✅`
     );
@@ -59,7 +59,7 @@ export async function handleLink(interaction: ChatInputCommandInteraction & {gui
     await confirmation.deferUpdate();
 
     if (confirmation.customId === 'approve-link') {
-      await setProfile(user.id, player, interaction.guild.id);
+      await link(user, player, interaction.guild);
       return confirmation.editReply({
         content: `✅ Le profil Brawl Stars ${player.name} (\`${player.tag}\`) a été lié au profil Discord de ${user.displayName} sur ${interaction.guild.name}.`,
         components: [],

@@ -28,8 +28,8 @@ import { handleUpdateClub } from '../../commands/brawlStars/discordCommands/upda
 import { autocompleteGuildClubStrings } from '../../utils/autocomplete';
 import { handleSetVerify } from '../../commands/brawlStars/discordCommands/set/setVerify';
 import { handleGetVerify } from '../../commands/brawlStars/discordCommands/get/getVerify';
-import { handleLinkProfile } from '../../commands/brawlStars/discordCommands/set/setProfile';
-import { data as linkData } from '../../commands/brawlStars/discordCommands/link';
+import { handleLinkProfile, data as linkData } from '../../commands/brawlStars/discordCommands/link';
+import { handleUnlinkProfile, data as unlinkData } from '../../commands/brawlStars/discordCommands/unlink';
 
 
 config();
@@ -40,7 +40,8 @@ const commands = [
     getData,
     removeData,
     updateData,
-    linkData
+    linkData,
+    unlinkData
 ].map(data => data.toJSON());
 const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
@@ -110,6 +111,7 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.commandName === 'audit') return handleAudit(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
     if (interaction.commandName === 'link') return handleLinkProfile(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
+    if (interaction.commandName === 'unlink') return handleUnlinkProfile(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
     const sub = interaction.options.getSubcommand();
 
     if(group === 'set') {

@@ -3,12 +3,21 @@ import { Player } from '../interfaces/brawlStarsInterfaces/player';
 import { PlayerRow } from '../interfaces/player';
 import { Guild, User } from 'discord.js';
 
-export async function setProfile(userId: string, player: Player, guildId: string): Promise<void> {
+export async function link(user: User, player: Player, guild: Guild): Promise<void> {
   const pool = await connectionPromise;
 
   await pool.execute(
     'REPLACE INTO player (userId, playerTag, guildId) VALUES (?, ?, ?)',
-    [userId, player.tag, guildId]
+    [user.id, player.tag, guild.id]
+  );
+}
+
+export async function unlink(user: User, guild: Guild): Promise<void> {
+  const pool = await connectionPromise;
+
+  await pool.execute(
+    'DELETE FROM player WHERE userId = ? and guildId = ?',
+    [user.id, guild.id]
   );
 }
 
