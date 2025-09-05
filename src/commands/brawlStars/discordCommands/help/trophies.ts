@@ -10,7 +10,7 @@ export const helpEmbed: APIEmbed = {
     },
     {
       name: 'Commande',
-      value: '`/get trophyrole` - Renvoie la liste des paliers de trophées associés à un rôle.'
+      value: '`/get trophyroles` - Renvoie la liste des paliers de trophées associés à un rôle.'
     },
     {
       name: 'Commande',

@@ -10,7 +10,7 @@ export const helpEmbed: APIEmbed = {
     },
     {
       name: 'Commande',
-      value: '`/get graderole` - Renvoie la liste des grades Brawl Stars associés à un rôle.'
+      value: '`/get graderoles` - Renvoie la liste des grades Brawl Stars associés à un rôle.'
     },
     {
       name: 'Commande',
