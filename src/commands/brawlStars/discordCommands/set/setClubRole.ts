@@ -10,13 +10,8 @@ export async function handleSetClubRole(interaction: ChatInputCommandInteraction
     if(!clubTag) return interaction.editReply(`Veuillez entrer le tag de club ❌`);
     clubTag = clearTag(clubTag);
 
-    return bsapi.getClubData(clubTag)
-    .then(async club => {
-        await setClubRole(interaction.guild, roleMention, club);
-        return interaction.editReply(`Le club ${club.name} a été associé au rôle ${roleMention.name} ✅`);
-    })
-    .catch(err => {
-        console.log(err);
-        return interaction.editReply(`Le tag de club \`${clubTag}\` n'a été trouvé sur Brawl Stars ❌`);
-    });
+    const club = await bsapi.getClubData(clubTag);;
+    if(!club) return interaction.editReply(`Le tag de club \`${clubTag}\` n'a été trouvé sur Brawl Stars ❌`);
+    await setClubRole(interaction.guild, roleMention, club);
+    return interaction.editReply(`Le club ${club.name} a été associé au rôle ${roleMention.name} ✅`);
 }

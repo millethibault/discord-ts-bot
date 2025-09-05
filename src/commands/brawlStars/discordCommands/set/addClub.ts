@@ -7,12 +7,8 @@ export async function handleAddClub(interaction: ChatInputCommandInteraction & {
     let clubTag = interaction.options.getString('tag', true);
     clubTag = clearTag(clubTag);
 
-    return bsapi.getClubData(clubTag)
-    .then(async club => {
-        await setClub(interaction.guild, club);
-        return interaction.editReply(`Le club ${club.name} (\`${club.tag}\`) a été ajouté au serveur ${interaction.guild.name} ✅`);
-    })
-    .catch(err => {
-        return interaction.editReply(`Le tag de club \`${clubTag}\` n'a été trouvé sur Brawl Stars ❌`);
-    });
+    const club = await bsapi.getClubData(clubTag)
+    if(!club) return interaction.editReply(`Le tag de club \`${clubTag}\` n'a été trouvé sur Brawl Stars ❌`);
+    await setClub(interaction.guild, club);
+    return interaction.editReply(`Le club ${club.name} (\`${club.tag}\`) a été ajouté au serveur ${interaction.guild.name} ✅`);
 }

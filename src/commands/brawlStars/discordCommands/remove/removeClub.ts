@@ -16,15 +16,3 @@ export async function handleRemoveClub(interaction: ChatInputCommandInteraction 
     await removeClub(interaction.guild, clubTag);
     return interaction.editReply(`Le club ${club.clubName} (\`${club.clubTag}\`) a été supprimé du serveur ${interaction.guild.name} ✅`);
 }
-
-export const autocomplete = async (interaction: AutocompleteInteraction & { guild: Guild }) => {
-		const focusedValue = interaction.options.getFocused();
-    const clubs = await getClub(interaction.guild);
-    const guildClubs = clubs.filter(club => club.guildId == interaction.guild.id);
-
-		const choices = guildClubs.map(club => club.clubName);
-		const filtered = guildClubs.filter(choice => choice.clubName.startsWith(focusedValue));
-		await interaction.respond(
-			filtered.map(choice => ({ name: choice.clubName, value: choice.clubTag })),
-		);
-	}

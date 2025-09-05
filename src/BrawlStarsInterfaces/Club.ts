@@ -8,9 +8,10 @@ import { encodeTag } from './Utils/tag';
  * @param {string} tag - Le tag du club (sans le #)
  * @returns {Promise<Club>} - Le JSON de la réponse API
  */
-export async function getClubData(tag: string): Promise<Club> {
+export async function getClubData(tag: string): Promise<Club | null> {
   const encodedTag = encodeTag(tag);
   const url = `https://api.brawlstars.com/v1/clubs/${encodedTag}`;
-  const response = await requestBrawlStarsApi(url);
-  return response as Club;
+  return await requestBrawlStarsApi(url)
+  .then(club => club as Club)
+  .catch(() => null)
 }

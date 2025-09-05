@@ -22,3 +22,13 @@ export async function getProfile(user: User, guild: Guild): Promise<PlayerRow | 
   if (rows.length === 0) return null;
   return rows[0];
 }
+
+export async function getAllProfiles(guild: Guild): Promise<PlayerRow[]> {
+  const pool = await connectionPromise;
+  const [rows] = await pool.execute(
+    'SELECT * FROM player WHERE guildId = ?',
+    [guild.id]
+  ) as [PlayerRow[], any];
+
+  return rows;
+}

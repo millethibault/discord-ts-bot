@@ -8,8 +8,8 @@ export async function handleSetProfile(interaction: ChatInputCommandInteraction 
     let playerTag = interaction.options.getString('tag', true);
     let user = interaction.options.getUser('membre', false);
     if(!user) user = interaction.member.user;
-
-    const [permission, errorString] = await checkRoleConditions(interaction, false)
+    const member = await interaction.guild.members.fetch(user.id);
+    const [permission, errorString] = await checkRoleConditions(member, interaction.member, false)
     if(!permission) return interaction.editReply(errorString);
     playerTag = clearTag(playerTag);
 

@@ -5,7 +5,7 @@ import { DISCORD_TOKEN, CLIENT_ID, GUILD_ID, DEPLOY_COMMANDS } from '../../confi
 import { client } from '../client';
 import { handleAddClub } from '../../commands/brawlStars/discordCommands/set/addClub';
 import { handleGetClubs } from '../../commands/brawlStars/discordCommands/get/getClubs';
-import { handleRemoveClub, autocomplete as autocompleteRemoveClub } from '../../commands/brawlStars/discordCommands/remove/removeClub';
+import { handleRemoveClub } from '../../commands/brawlStars/discordCommands/remove/removeClub';
 import { handleSetProfile } from '../../commands/brawlStars/discordCommands/set/setProfile';
 import { handleGetProfile } from '../../commands/brawlStars/discordCommands/get/profile';
 import { handleSetClubRole } from '../../commands/brawlStars/discordCommands/set/setClubRole';
@@ -14,7 +14,7 @@ import { handleGetGradeRole } from '../../commands/brawlStars/discordCommands/ge
 import { handleSetGradeRole } from '../../commands/brawlStars/discordCommands/set/setGradeRole';
 import { handleSetTrophyRole } from '../../commands/brawlStars/discordCommands/set/setTrophyRole';
 import { handleGetTrophyRole } from '../../commands/brawlStars/discordCommands/get/getTrophyRole';
-import { handleUpdateMember, data as updateMemberData } from '../../commands/brawlStars/discordCommands/update/updateMember';
+import { handleUpdateMember } from '../../commands/brawlStars/discordCommands/update/updateMember';
 import { handleRemoveTrophyRole, autocomplete as autocompleteRemoveTrophyRole } from '../../commands/brawlStars/discordCommands/remove/removeTrophyRole';
 import { handleSetAutoRename } from '../../commands/brawlStars/discordCommands/set/setAutoRename';
 import { handleGetAutoRename } from '../../commands/brawlStars/discordCommands/get/getAutoRename';
@@ -22,16 +22,20 @@ import { handleAudit, data as auditData } from '../../commands/brawlStars/discor
 import { data as setData } from '../../commands/brawlStars/discordCommands/set';
 import { data as getData } from '../../commands/brawlStars/discordCommands/get';
 import { data as removeData } from '../../commands/brawlStars/discordCommands/remove';
+import { data as updateData } from '../../commands/brawlStars/discordCommands/update';
 import { handleRemoveGradeRole } from '../../commands/brawlStars/discordCommands/remove/removeGradeRole';
+import { handleUpdateClub } from '../../commands/brawlStars/discordCommands/update/updateClub';
+import { autocompleteGuildClubStrings } from '../../utils/autocomplete';
+
 
 config();
 
 const commands = [
-    updateMemberData,
     auditData,
     setData,
     getData,
-    removeData
+    removeData,
+    updateData
 ].map(data => data.toJSON());
 const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
@@ -70,10 +74,16 @@ client.on('interactionCreate', async interaction => {
     
   if (interaction.isAutocomplete()) {
     const auto = interaction as AutocompleteInteraction;
+    const sub = interaction.options.getSubcommand();
 
-    if (auto.commandName === 'removeclub') {
+    if (auto.commandName === 'remove' && sub === 'club') {
         if(!(interaction.guild instanceof Guild)) return;
-        return autocompleteRemoveClub(auto as AutocompleteInteraction & { guild: Guild});
+        return autocompleteGuildClubStrings(auto as AutocompleteInteraction & { guild: Guild});
+    }
+
+    if (auto.commandName === 'update' && sub === 'club') {
+        if(!(interaction.guild instanceof Guild)) return;
+        return autocompleteGuildClubStrings(auto as AutocompleteInteraction & { guild: Guild});
     }
 
     if (auto.commandName === 'removetrophyrole') {
@@ -91,9 +101,8 @@ client.on('interactionCreate', async interaction => {
 
     const group = interaction.commandName;
 
-    if (interaction.commandName === 'updateprofile') return handleUpdateMember(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember, user: User });
     if (interaction.commandName === 'audit') return handleAudit(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
-
+    
     const sub = interaction.options.getSubcommand();
 
     if(group === 'set') {
@@ -118,6 +127,11 @@ client.on('interactionCreate', async interaction => {
         if (sub === 'graderole') return handleRemoveGradeRole(interaction as ChatInputCommandInteraction & { guild: Guild });
         if (sub === 'club') return handleRemoveClub(interaction as ChatInputCommandInteraction & { guild: Guild });
         if (sub === 'trophyrole') return handleRemoveTrophyRole(interaction as ChatInputCommandInteraction & { guild: Guild });
+    }
+
+    if(group === 'update') {
+      if (sub === 'profile') return handleUpdateMember(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember, user: User });
+      if (sub === 'club') return handleUpdateClub(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember, user: User });
     }
   }
   catch {

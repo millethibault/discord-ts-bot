@@ -2,7 +2,7 @@ import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 
 export const data = new SlashCommandBuilder()
   .setName('remove')
-  .setDescription('Récupérer des paramètres')
+  .setDescription('Supprimer des paramètres du serveur')
   .addSubcommand(sub => sub
     .setName('club')
     .setDescription('Dissocie un de vos clubs Brawl Stars de votre serveur discord et à son rôle.')
