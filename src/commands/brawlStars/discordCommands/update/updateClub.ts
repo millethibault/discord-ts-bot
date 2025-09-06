@@ -32,7 +32,7 @@ export async function handleUpdateClub(interaction: ChatInputCommandInteraction 
             if(!member) continue;
             clubMemberDiscordId.push(member.id)
             countChecked +=1
-            const [permission, _] = await checkRoleConditions(member, interaction.member, false, true);
+            const [permission, _] = await checkRoleConditions(member, interaction.member, true, true);
             if(!permission) continue;
             const trophyRoleUpdated = await updateTrophyRole(member, clubMember.trophies);
             member = await member.fetch();
@@ -55,7 +55,8 @@ export async function handleUpdateClub(interaction: ChatInputCommandInteraction 
         let count = 0;
         if(role) {
             for (let member of role.members.values()) {
-                if(member.roles.cache.has(role.id) && !clubMemberDiscordId.includes(member.id)) {
+                const [permission, _] = await checkRoleConditions(member, interaction.member, false, true);
+                if(member.roles.cache.has(role.id) && !clubMemberDiscordId.includes(member.id) && permission) {
                     await member.roles.remove(role);
                     count +=1
                 }
