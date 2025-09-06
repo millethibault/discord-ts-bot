@@ -3,38 +3,39 @@ import { config } from 'dotenv';
 import { error } from 'console';
 import { DISCORD_TOKEN, CLIENT_ID, GUILD_ID, DEPLOY_COMMANDS } from '../../config/env';
 import { client } from '../client';
-import { handleAddClub } from '../../commands/brawlStars/discordCommands/set/addClub';
-import { handleGetClubs } from '../../commands/brawlStars/discordCommands/get/getClubs';
-import { handleRemoveClub } from '../../commands/brawlStars/discordCommands/remove/removeClub';
-//import { handleSetProfile } from '../../commands/brawlStars/discordCommands/set/setProfile';
-import { handleGetProfile } from '../../commands/brawlStars/discordCommands/get/profile';
-import { handleSetClubRole } from '../../commands/brawlStars/discordCommands/set/setClubRole';
-import { handleGetClubRole } from '../../commands/brawlStars/discordCommands/get/getClubRole';
-import { handleGetGradeRole } from '../../commands/brawlStars/discordCommands/get/getGradeRoles';
-import { handleSetGradeRole } from '../../commands/brawlStars/discordCommands/set/setGradeRole';
-import { handleSetTrophyRole } from '../../commands/brawlStars/discordCommands/set/setTrophyRole';
-import { handleGetTrophyRole } from '../../commands/brawlStars/discordCommands/get/getTrophyRole';
-import { handleUpdateMember } from '../../commands/brawlStars/discordCommands/update/updateMember';
-import { handleRemoveTrophyRole, autocomplete as autocompleteRemoveTrophyRole } from '../../commands/brawlStars/discordCommands/remove/removeTrophyRole';
-import { handleSetAutoRename } from '../../commands/brawlStars/discordCommands/set/setAutoRename';
-import { handleGetAutoRename } from '../../commands/brawlStars/discordCommands/get/getAutoRename';
-import { handleAudit, data as auditData } from '../../commands/brawlStars/discordCommands/audit';
-import { data as setData } from '../../commands/brawlStars/discordCommands/set';
-import { data as getData } from '../../commands/brawlStars/discordCommands/get';
-import { data as removeData } from '../../commands/brawlStars/discordCommands/remove';
-import { data as updateData } from '../../commands/brawlStars/discordCommands/update';
-import { handleRemoveGradeRole } from '../../commands/brawlStars/discordCommands/remove/removeGradeRole';
-import { handleUpdateClub } from '../../commands/brawlStars/discordCommands/update/updateClub';
+import { handleAddClub } from '../../commands/discordCommands/set/addClub';
+import { handleGetClubs } from '../../commands/discordCommands/get/getClubs';
+import { handleRemoveClub } from '../../commands/discordCommands/remove/removeClub';
+import { handleGetProfile } from '../../commands/discordCommands/get/profile';
+import { handleSetClubRole } from '../../commands/discordCommands/set/setClubRole';
+import { handleGetClubRole } from '../../commands/discordCommands/get/getClubRole';
+import { handleGetGradeRole } from '../../commands/discordCommands/get/getGradeRoles';
+import { handleSetGradeRole } from '../../commands/discordCommands/set/setGradeRole';
+import { handleSetTrophyRole } from '../../commands/discordCommands/set/setTrophyRole';
+import { handleGetTrophyRole } from '../../commands/discordCommands/get/getTrophyRole';
+import { handleUpdateMember } from '../../commands/discordCommands/update/updateMember';
+import { handleRemoveTrophyRole, autocomplete as autocompleteRemoveTrophyRole } from '../../commands/discordCommands/remove/removeTrophyRole';
+import { handleSetAutoRename } from '../../commands/discordCommands/set/setAutoRename';
+import { handleGetAutoRename } from '../../commands/discordCommands/get/getAutoRename';
+import { handleAudit, data as auditData } from '../../commands/discordCommands/audit';
+import { data as setData } from '../../commands/discordCommands/set';
+import { data as getData } from '../../commands/discordCommands/get';
+import { data as removeData } from '../../commands/discordCommands/remove';
+import { data as updateData } from '../../commands/discordCommands/update';
+import { handleRemoveGradeRole } from '../../commands/discordCommands/remove/removeGradeRole';
+import { handleUpdateClub } from '../../commands/discordCommands/update/updateClub';
 import { autocompleteGuildClubStrings } from '../../utils/autocomplete';
-import { handleSetVerify } from '../../commands/brawlStars/discordCommands/set/setVerify';
-import { handleGetVerify } from '../../commands/brawlStars/discordCommands/get/getVerify';
-import { handleLinkProfile, data as linkData } from '../../commands/brawlStars/discordCommands/link';
-import { handleUnlinkProfile, data as unlinkData } from '../../commands/brawlStars/discordCommands/unlink';
-import { changeHelpCommand, handleHelpCommand } from '../../commands/brawlStars/discordCommands/help';
-import { data as helpData } from '../../commands/brawlStars/discordCommands/help/data';
-import { handleAbout, data as aboutData } from '../../commands/brawlStars/discordCommands/about';
-import { handleLog, data as logData } from '../../commands/brawlStars/discordCommands/log';
-
+import { handleSetVerify } from '../../commands/discordCommands/set/setVerify';
+import { handleGetVerify } from '../../commands/discordCommands/get/getVerify';
+import { handleLinkProfile, data as linkData } from '../../commands/discordCommands/link';
+import { handleUnlinkProfile, data as unlinkData } from '../../commands/discordCommands/unlink';
+import { changeHelpCommand, handleHelpCommand } from '../../commands/discordCommands/help';
+import { data as helpData } from '../../commands/discordCommands/help/data';
+import { handleAbout, data as aboutData } from '../../commands/discordCommands/about';
+import { handleLog, data as logData } from '../../commands/discordCommands/log';
+import { getTraductions } from '../../traductions/tradFunctions';
+import { handleSetLang } from '../../commands/discordCommands/set/setLang';
+import { handleGetLang } from '../../commands/discordCommands/get/getLang';
 config();
 
 const commands = [
@@ -80,9 +81,8 @@ const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 })();
 
 client.on('interactionCreate', async interaction => {
-    
+
   if (interaction.isStringSelectMenu()) {
-  
     const menu = interaction as StringSelectMenuInteraction;
     if(!(interaction.guild instanceof Guild)) return;
     if(!(interaction.member instanceof GuildMember)) return;
@@ -102,10 +102,11 @@ client.on('interactionCreate', async interaction => {
   if (interaction.isChatInputCommand()) try {
     await interaction.deferReply()
     // Gérer la commande slash
-    if(!(interaction.user instanceof User)) return interaction.editReply(`❌ Erreur lié à votre compte discord.`);
-    if(!(interaction.member instanceof GuildMember)) return interaction.editReply(`❌ Erreur lié à votre compte discord sur ce serveur.`);
     if(!(interaction.guild instanceof Guild)) return interaction.editReply(`❌ Les commandes ne sont utilisables que dans les serveurs.`);
-    if(!(interaction.channel instanceof GuildChannel)) return interaction.editReply(`❌ Les commandes ne sont utilisables que dans les salons de serveurs.`);
+    const traductions = await getTraductions(interaction.guild)
+    if(!(interaction.user instanceof User)) return interaction.editReply(traductions.ERROR_LINKED_TO_YOUR_DISCORD_ACCOUNT);
+    if(!(interaction.member instanceof GuildMember)) return interaction.editReply(traductions.ERROR_LINKED_TO_YOUR_DISCORD_ACCOUNT);
+    if(!(interaction.channel instanceof GuildChannel)) return interaction.editReply(traductions.ERROR_COMMAND_NOT_IN_GUILDCHANNEL);
 
     const group = interaction.commandName;
 
@@ -124,8 +125,9 @@ client.on('interactionCreate', async interaction => {
         if (sub === 'autorename') return handleSetAutoRename(interaction as ChatInputCommandInteraction & { guild: Guild });
         if (sub === 'club') return handleAddClub(interaction as ChatInputCommandInteraction & { guild: Guild });
         if (sub === 'verify') return handleSetVerify(interaction as ChatInputCommandInteraction & { guild: Guild, channel: GuildChannel });
+        if (sub === 'lang') return handleSetLang(interaction as ChatInputCommandInteraction & { guild: Guild, channel: GuildChannel });
     }
-    
+
     if(group === 'get') {
         if (sub === 'profile') return handleGetProfile(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
         if (sub === 'clubs') return handleGetClubs(interaction as ChatInputCommandInteraction & { guild: Guild });
@@ -134,6 +136,7 @@ client.on('interactionCreate', async interaction => {
         if (sub === 'trophyroles') return handleGetTrophyRole(interaction as ChatInputCommandInteraction & { guild: Guild });
         if (sub === 'autorename') return handleGetAutoRename(interaction as ChatInputCommandInteraction & { guild: Guild });
         if (sub === 'verify') return handleGetVerify(interaction as ChatInputCommandInteraction & { guild: Guild });
+        if (sub === 'lang') return handleGetLang(interaction as ChatInputCommandInteraction & { guild: Guild });
     }
 
     if(group === 'remove') {
@@ -148,6 +151,8 @@ client.on('interactionCreate', async interaction => {
     }
   }
   catch {
-    return interaction.editReply(`La commande n'a pas été trouvée`);
+    if(!(interaction.guild instanceof Guild)) return interaction.editReply(`La commande n'a pas été trouvée`);
+    const traductions = await getTraductions(interaction.guild)
+    return interaction.editReply(traductions.ERROR_COMMAND_NOT_FOUND);
   }
 });

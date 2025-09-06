@@ -13,18 +13,27 @@ import {
 import { getVerify } from '../database/verify';
 import { link } from '../database/player';
 import { Player } from '../interfaces/brawlStarsInterfaces/player';
+import { getTraductions } from '../traductions/tradFunctions';
 
-export async function handleLink(interaction: ChatInputCommandInteraction & {guild: Guild, member: GuildMember, channel: GuildChannel}, user: User, player: Player) {
+export async function handleLink(
+  interaction: ChatInputCommandInteraction & {
+    guild: Guild;
+    member: GuildMember;
+    channel: GuildChannel;
+  },
+  user: User,
+  player: Player
+) {
+  const traductions = await getTraductions(interaction.guild);
   const verify = await getVerify(interaction.guild);
 
   if (!verify || interaction.member.permissions.has('ManageRoles')) {
     await link(user, player, interaction.guild);
     return interaction.editReply(
-      `Le profil Brawl Stars ${player.name} (\`${player.tag}\`) a été lié au profil Discord de ${user.displayName} sur ${interaction.guild.name} ✅`
+      traductions.LINK_SUCCESS(player.name, player.tag, user.displayName, interaction.guild.name)
     );
   }
 
-  // ⚠️ Vérification requise par un modérateur
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId('approve-link')
@@ -37,43 +46,36 @@ export async function handleLink(interaction: ChatInputCommandInteraction & {gui
   );
 
   await interaction.editReply({
-    content: `🔍 Profil trouvé : ${player.name} (\`${player.tag}\`).\n⏳ Attendez qu’un modérateur valide la liaison.`,
+    content: traductions.LINK_PENDING_MODERATOR(player.name, player.tag),
     components: [row],
   });
 
   try {
     const confirmation = await interaction.channel.awaitMessageComponent({
       componentType: ComponentType.Button,
-      time: 24 * 3600 * 1000, // 24h
+      time: 24 * 3600 * 1000,
       filter: (i) =>
         i.user.id !== interaction.user.id &&
         i.memberPermissions?.has(PermissionFlagsBits.ManageRoles),
     });
-
-    if (!confirmation) {
-      return interaction.editReply({
-        content: `⏱️ Temps écoulé. La liaison du profil n’a pas été validée.`,
-        components: [],
-      });
-    }
 
     await confirmation.deferUpdate();
 
     if (confirmation.customId === 'approve-link') {
       await link(user, player, interaction.guild);
       return confirmation.editReply({
-        content: `✅ Le profil Brawl Stars ${player.name} (\`${player.tag}\`) a été lié au profil Discord de ${user.displayName} sur ${interaction.guild.name}.`,
+        content: traductions.LINK_APPROVED(player.name, player.tag, user.displayName, interaction.guild.name),
         components: [],
       });
     } else {
       return confirmation.editReply({
-        content: `❌ La liaison du profil a été refusée par un modérateur.`,
+        content: traductions.LINK_REJECTED,
         components: [],
       });
     }
   } catch (error) {
     return interaction.editReply({
-      content: `⏰ Aucun modérateur n’a validé à temps.`,
+      content: traductions.LINK_NO_VALIDATION,
       components: [],
     });
   }

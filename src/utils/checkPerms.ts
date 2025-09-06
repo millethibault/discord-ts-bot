@@ -1,40 +1,44 @@
-import { CommandInteraction, Client, GuildMember, ChatInputCommandInteraction } from 'discord.js';
+import { GuildMember } from 'discord.js';
 import { client } from '../bot/client';
-import { getVerify } from '../database/verify';
+import { getTraductions } from '../traductions/tradFunctions';
 
 type CheckResult = [boolean, string];
 
 export async function checkRoleConditions(
   member: GuildMember,
   executor: GuildMember,
-  hardCheck: boolean=true,
-  updateAll: boolean=false
+  hardCheck: boolean = true,
+  updateAll: boolean = false
 ): Promise<CheckResult> {
-  if (!member.guild) return [false, "❌ Cette commande doit être utilisée dans un serveur."]
-  if(!client.user) return [false, "❌ Problème de synchronisation du bot"];
+  const traductions = await getTraductions(member.guild);
 
-  // Récupère le bot en tant que membre du serveur
-  const botMember = await member.guild.members.fetch(client.user!.id);
+  if (!member.guild) return [false, traductions.ERROR_COMMAND_NOT_IN_GUILDCHANNEL];
+  if (!client.user) return [false, traductions.ERROR_SYNC_BOT];
+
+  const botMember = await member.guild.members.fetch(client.user.id);
+
   if (!botMember.permissions.has('ManageRoles') && hardCheck) {
-    return [false, "❌ Je n'ai pas la permission d'attribuer des rôles sur ce serveur !"];
+    return [false, traductions.ERROR_BOT_MISSING_PERMISSION];
   }
 
-  // Vérifie la hiérarchie des rôles du bot vs. membre ciblé
   if (botMember.roles.highest.position <= member.roles.highest.position && hardCheck) {
     return [
       false,
-      `❌ Je ne peux pas gérer ${member.displayName} car son rôle est trop élevé (${member.roles.highest.name}).`
+      traductions.ERROR_BOT_ROLE_TOO_LOW(member.displayName, member.roles.highest.name)
     ];
   }
 
-  // Vérifie la hiérarchie des rôles de l'utilisateur vs. membre ciblé (sauf si c'est lui-même)
   if (
     executor.roles.highest.position <= member.roles.highest.position &&
     member.id !== executor.id
   ) {
     return [
       false,
-      `❌ Vous n'êtes pas autorisé à gérer ${member.displayName} car son rôle (${member.roles.highest.name}) est égal ou supérieur au vôtre (${executor.roles.highest.name}).`
+      traductions.ERROR_USER_ROLE_TOO_LOW(
+        member.displayName,
+        member.roles.highest.name,
+        executor.roles.highest.name
+      )
     ];
   }
 
