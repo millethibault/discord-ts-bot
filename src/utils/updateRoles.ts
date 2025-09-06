@@ -7,6 +7,7 @@ import { getClub } from "../database/club";
 import { getProfile } from "../database/player";
 import { getClubRoles } from "../database/clubRole";
 import { getAutoRename } from "../database/autoRename";
+import { log } from "../database/log";
 
 type MessageString = { value: string };
 
@@ -27,9 +28,13 @@ export async function updateTrophyRole(member: GuildMember, playerTrophies: numb
     if(!client.user) return null;
     const botMember = await member.guild.members.fetch(client.user.id);
     const rolesToRemove = member.roles.cache.filter(role => trophyRolesId.includes(role.id) && role.id !== trophyRoleId && role.position < botMember.roles.highest.position);
-    if(rolesToRemove.size > 0) await member.roles.remove(rolesToRemove);
+    for(let role of rolesToRemove.values()) {
+        await member.roles.remove(role)
+        await log(member.guild, role, member, false);
+    }
     if(trophyRole.position > botMember.roles.highest.position) return null;
     await member.roles.add(trophyRole);
+    await log(member.guild, trophyRole, member, true);
 
     messageString.value += `Trophées mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${trophyRole.name}\n`;
     return trophyRole;
@@ -62,12 +67,16 @@ export async function updateGradeRole(member: GuildMember, club: Club, messageSt
         .filter(role => Object.entries(gradeRoles)
             .filter(([key, value]) =>['president', 'vicePresident', 'senior', 'member'].includes(key) && value !== undefined && role.position < botMember.roles.highest.position)
             .map(([_, value]) => value as string).includes(role.id) && role.id !== gradeRole.id);
-
-    if(rolesToRemove.size > 0) await member.roles.remove(rolesToRemove);
+    
+    for(let role of rolesToRemove.values()) {
+        await member.roles.remove(role);
+        await log(member.guild, role, member, false);
+    }
     if(member.roles.cache.has(gradeRole.id)) return null;
 
     if(gradeRole.position > botMember.roles.highest.position) return null;
     await member.roles.add(gradeRole);
+    await log(member.guild, gradeRole, member, true);
     messageString.value += `Grade mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${gradeRole.name}\n`;
     return gradeRole;
 }
@@ -75,10 +84,10 @@ export async function updateGradeRole(member: GuildMember, club: Club, messageSt
 export async function updateClubRole(member: GuildMember, club: Club, messageString: MessageString = { value:``}): Promise<Role | null> {
     const clubRoles = await getClubRoles(member.guild);
     if(!clubRoles[0]) {
-        messageString.value +=  `Aucun rôle de grade n'a été créé sur ce serveur.\,`;
+        messageString.value +=  `Aucun rôle de club n'a été créé sur ce serveur.\,`;
         return null;
     };
-
+    
     const playerClub = clubRoles.find(guildClub => guildClub.clubTag === club.tag);
     if(!playerClub || !playerClub.roleId) return null;
 
@@ -88,11 +97,15 @@ export async function updateClubRole(member: GuildMember, club: Club, messageStr
     const botMember = await member.guild.members.fetch(client.user.id);
 
     const rolesToRemove = member.roles.cache.filter(role => clubRoles.map(clubRole => clubRole.roleId).includes(role.id) && role.id !== clubRole.id && role.position < botMember.roles.highest.position);
-    if(rolesToRemove.size > 0) await member.roles.remove(rolesToRemove);
+    for(let role of rolesToRemove.values()) {
+        await member.roles.remove(role);
+        await log(member.guild, role, member, false);
+    }
     if(member.roles.cache.has(clubRole.id)) return null;
 
     if(clubRole.position > botMember.roles.highest.position) return null;
     await member.roles.add(clubRole);
+    await log(member.guild, clubRole, member, true);
     messageString.value += `Grade mis à jour : ${rolesToRemove.size > 0 ? `${rolesToRemove.map(role => role.name).join(', ')} ➡️ ` : '' }${clubRole.name}\n`;
     return clubRole;
 }

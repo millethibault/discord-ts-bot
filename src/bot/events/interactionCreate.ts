@@ -33,6 +33,7 @@ import { handleUnlinkProfile, data as unlinkData } from '../../commands/brawlSta
 import { changeHelpCommand, handleHelpCommand } from '../../commands/brawlStars/discordCommands/help';
 import { data as helpData } from '../../commands/brawlStars/discordCommands/help/data';
 import { handleAbout, data as aboutData } from '../../commands/brawlStars/discordCommands/about';
+import { handleLog, data as logData } from '../../commands/brawlStars/discordCommands/log';
 
 config();
 
@@ -45,7 +46,8 @@ const commands = [
     linkData,
     unlinkData,
     helpData,
-    aboutData
+    aboutData,
+    logData
 ].map(data => data.toJSON());
 const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
@@ -112,6 +114,7 @@ client.on('interactionCreate', async interaction => {
     if (interaction.commandName === 'unlink') return handleUnlinkProfile(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
     if (interaction.commandName === 'help') return handleHelpCommand(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
     if (interaction.commandName === 'about') return handleAbout(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
+    if (interaction.commandName === 'log') return handleLog(interaction as ChatInputCommandInteraction & { guild: Guild });
     const sub = interaction.options.getSubcommand();
 
     if(group === 'set') {

@@ -11,7 +11,7 @@ export async function handleUpdateClub(interaction: ChatInputCommandInteraction 
 
     let clubInput = interaction.options.getString('club', false);
     const clubs = await getClub(interaction.guild);
-    const guildClubs = clubs.filter(club => !clubInput || club.clubTag === clubInput && club.guildId == interaction.guild.id);
+    const guildClubs = clubs.filter(club => !clubInput || (club.clubTag === clubInput && club.guildId == interaction.guild.id));
     if (!guildClubs[0]) return interaction.editReply(`❌ Aucun club n'est ${clubInput ? `enregistré` : `associé à \`${clubInput}\``} sur le serveur ${interaction.guild.name}`);
     let messageString = `✅ Mise à jour des clubs du sereur effectée !\n\n`;
     let clubMemberDiscordId = []
@@ -26,31 +26,34 @@ export async function handleUpdateClub(interaction: ChatInputCommandInteraction 
         let countUpdated = 0;
         let countChecked = 0
         for(let clubMember of bsClub.members) {
-            let bsProfileRow: PlayerRow | undefined = allGuildBsProfiles.find(bsProfile => bsProfile.playerTag === clubMember.tag);
-            if(!bsProfileRow) continue;
-            let member = await interaction.guild.members.fetch(bsProfileRow.userId);
-            if(!member) continue;
-            clubMemberDiscordId.push(member.id)
-            countChecked +=1
-            const [permission, _] = await checkRoleConditions(member, interaction.member, true, true);
-            if(!permission) continue;
-            const trophyRoleUpdated = await updateTrophyRole(member, clubMember.trophies);
-            member = await member.fetch();
-            const gradeRoleUpdate = await updateGradeRole(member, bsClub);
-            member = await member.fetch();
-            const clubRoleUpdated = await updateClubRole(member, bsClub);
-            member = await member.fetch();
-            const memberNameUpdated = await updateMemberName(member, clubMember.name);
-            member = await member.fetch();
-            if(trophyRoleUpdated || gradeRoleUpdate || clubRoleUpdated || memberNameUpdated) {
-                countUpdated +=1;
-            }
+            let bsProfileRows: PlayerRow[] = allGuildBsProfiles.filter(bsProfile => bsProfile.playerTag === clubMember.tag);
+            if(!bsProfileRows[0]) continue;
+            for(let bsProfileRow of bsProfileRows){
+                let member = await interaction.guild.members.fetch(bsProfileRow.userId);
+                if(!member) continue;
+                clubMemberDiscordId.push(member.id)
+                countChecked +=1
+                const [permission, la] = await checkRoleConditions(member, interaction.member, true, true)
+                if(!permission) continue;
+                const trophyRoleUpdated = await updateTrophyRole(member, clubMember.trophies);
+                member = await member.fetch();
+                const gradeRoleUpdate = await updateGradeRole(member, bsClub);
+                member = await member.fetch();
+                const clubRoleUpdated = await updateClubRole(member, bsClub);
+                member = await member.fetch();
+                const memberNameUpdated = await updateMemberName(member, clubMember.name);
+                member = await member.fetch();
+                if(trophyRoleUpdated || gradeRoleUpdate || clubRoleUpdated || memberNameUpdated) {
+                    countUpdated +=1;
+                }
+
+                }
         }
         const emoji = countUpdated > 0 ? countUpdated > 3 ? countUpdated > 5 ? '⏭️' : '⏩' : '▶️' : '⏸️';
         if(countUpdated > 0) messageString += `${emoji} \`${countUpdated}\` membre${countUpdated > 2 ? 's' : ''} de ${bsClub.name} mis à jour parmi les \`${countChecked}/${bsClub.members.length}\` enregistrés sur votre serveur !\n\n`;
         else messageString += `${emoji} Les \`${countChecked}/${bsClub.members.length}\` membre${countChecked > 2 ? 's' : ''} du club ${bsClub.name} enregistrés sur votre serveur étaient déjà tous à jour !\n\n`;
     }
-    for (let club of guildClubs) {
+    if(!clubInput) for (let club of guildClubs) {
         const role = interaction.guild.roles.cache.find(guildRole => guildRole.id === club.roleId);
         let count = 0;
         if(role) {
