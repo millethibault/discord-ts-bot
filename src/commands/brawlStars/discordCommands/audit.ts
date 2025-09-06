@@ -43,7 +43,7 @@ export async function handleAudit(interaction: ChatInputCommandInteraction & { g
     if(nonAuditedDbRoles[0] && !verify) messageString += `**‼️ ATTENTION : Certains de vos rôles donnent des permissions tandis que vos membres n'ont pas à être vérifiés par un modérateur pour les acquérir.\nExécutez immédiatement la commande \`/set verify\` !**`;
     //if(auditedNonDbRoles[0]) messageString += `${auditedNonDbRoles.length} rôles non gérés par ${botMember.displayName} sont conformes : ${auditedNonDbRoles.map(role => role.role.name).join(' | ')}.\nPensez à placer ces rôles au dessus du rôle ${botRole} dans les paramètres du serveur, ou bien à les associer à des données Brawl Stars.\n\n`;
     //if(nonAuditedNonDbRoles[0]) messageString += `${nonAuditedNonDbRoles.length} non rôles gérés par ${botMember.displayName} sont non conformes car ils possèdent trop de permissions : \n-${nonAuditedNonDbRoles.map(role => `${role.role.name} : ${role.exclusivePermissions.join(' | ')}\n`).join('.\n-')}.\n\n`;
-    
+    messageString += `Vous pouvez voir un log des acions du bot das les paramètres du serveur -> Logs du serveur (Audit log en anglais).`
     return interaction.editReply(messageString);
 }
 

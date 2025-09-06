@@ -14,11 +14,11 @@ export const data = new SlashCommandBuilder()
   )
     .addSubcommand(sub => sub
     .setName('club')
-    .setDescription('Met à jours les rôles discord des membres d\'un club enregistré sur votre serveur.')
+    .setDescription('Met à jours les rôles discord des membres de vos clubs enregistrés sur votre serveur.')
     .addStringOption(option =>
         option.setName('club')
         .setDescription('Choisis un club')
-        .setRequired(true)
+        .setRequired(false)
         .setAutocomplete(true)
     )
 )
