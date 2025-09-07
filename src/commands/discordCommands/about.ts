@@ -9,7 +9,14 @@ export async function handleAbout(interaction: ChatInputCommandInteraction & { m
 }
 
 import { SlashCommandBuilder } from 'discord.js';
+import { traductions as tradFr } from '../../traductions/fr';
+import { traductions as tradEn } from '../../traductions/en';
 
 export const data = new SlashCommandBuilder()
-  .setName('about')
-  .setDescription('A propos du bot');
+    .setName('about')
+    .setDescription(tradEn.ABOUT_COMMAND_DESCRIPTION)
+    .setDescriptionLocalizations({
+    "fr": tradFr.ABOUT_COMMAND_DESCRIPTION,
+    "en-GB": tradEn.ABOUT_COMMAND_DESCRIPTION,
+    "en-US": tradEn.ABOUT_COMMAND_DESCRIPTION
+    })

@@ -56,6 +56,6 @@ export async function changeHelpCommand(
 
   return interaction.reply({
     embeds: [embed],
-    ephemeral: true
+    flags: ["Ephemeral"]
   });
 }

@@ -36,6 +36,7 @@ import { handleLog, data as logData } from '../../commands/discordCommands/log';
 import { getTraductions } from '../../traductions/tradFunctions';
 import { handleSetLang } from '../../commands/discordCommands/set/setLang';
 import { handleGetLang } from '../../commands/discordCommands/get/getLang';
+import { handleConfig, data as configData } from '../../commands/discordCommands/config';
 config();
 
 const commands = [
@@ -48,7 +49,8 @@ const commands = [
     unlinkData,
     helpData,
     aboutData,
-    logData
+    logData,
+    configData
 ].map(data => data.toJSON());
 const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
@@ -116,6 +118,7 @@ client.on('interactionCreate', async interaction => {
     if (interaction.commandName === 'help') return handleHelpCommand(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
     if (interaction.commandName === 'about') return handleAbout(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
     if (interaction.commandName === 'log') return handleLog(interaction as ChatInputCommandInteraction & { guild: Guild });
+    if (interaction.commandName === 'config') return handleConfig(interaction as ChatInputCommandInteraction & { guild: Guild, member: GuildMember });
     const sub = interaction.options.getSubcommand();
 
     if(group === 'set') {

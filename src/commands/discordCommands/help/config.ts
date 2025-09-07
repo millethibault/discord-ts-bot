@@ -5,10 +5,13 @@ export const helpEmbed = (t: Traductions): APIEmbed => ({
   title: t.HELP_CATEGORY_CONFIG,
   description: t.HELP_CONFIG_DESCRIPTION,
   fields: [
+    { name: t.HELP_FIELD_COMMAND, value: '`/config` - ' + t.HELP_CONFIG_CONFIG },
     { name: t.HELP_FIELD_COMMAND, value: '`/set verify` - ' + t.HELP_CONFIG_SET_VERIFY },
     { name: t.HELP_FIELD_COMMAND, value: '`/get verify` - ' + t.HELP_CONFIG_GET_VERIFY },
     { name: t.HELP_FIELD_COMMAND, value: '`/set autorename` - ' + t.HELP_CONFIG_SET_AUTORENAME },
     { name: t.HELP_FIELD_COMMAND, value: '`/get autorename` - ' + t.HELP_CONFIG_GET_AUTORENAME },
+    { name: t.HELP_FIELD_COMMAND, value: '`/set lang` - ' + t.HELP_CONFIG_SET_LANG },
+    { name: t.HELP_FIELD_COMMAND, value: '`/get lang` - ' + t.HELP_CONFIG_GET_LANG },
   ],
   color: 0x00AEFF,
 });

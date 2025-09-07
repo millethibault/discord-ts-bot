@@ -8,7 +8,7 @@ export const traductions: Traductions = {
     ABOUT_BOT: (botUser:User) => 
         `${botUser.username} est un bot discord de gestion de clubs Brawl Stars.\n` +
         `Il permet de mettre à jour automatiquement les membres du serveur en fonction de leur profil en jeu : trophées atteints, club, grade, pseudo.\n` +
-        `N'hésitez pas à ajouter le bot à votre serveur : [PLACEHOLDER]`,
+        `N'hésitez pas à ajouter le bot à votre serveur en cliquant sur mon profil !`,
     ERROR_SYNC_BOT: `Erreur de synchronisation du bot`,
     AUDIT_DONE: (dbRolesLength: number, botMember:GuildMember) =>
         `Audit effectué.\n${botMember} gère \`${dbRolesLength}\` rôles.\n\n`,
@@ -219,7 +219,7 @@ export const traductions: Traductions = {
     HELP_GRADES_SET_GRADEROLE: "Associe un grade Brawl Stars à un rôle.",
     HELP_GRADES_GET_GRADEROLES: "Renvoie la liste des grades Brawl Stars associés à un rôle.",
     HELP_GRADES_REMOVE_GRADEROLE: "Dissocie un grade Brawl Stars de son rôle.",
-    HELP_GRADES_USAGE: "Les membres Discord reliés à leur compte BS ont leur grade mis à jour automatiquement lorsqu'ils font partie de vos clans. Il est conseillé de ne pas donner trop de permissions à ces rôles, ou bien d'activer la vérification avec `/verify`.",
+    HELP_GRADES_USAGE: "Les membres Discord reliés à leur compte BS ont leur grade mis à jour automatiquement lorsqu'ils font partie de vos clubs. Il est conseillé de ne pas donner trop de permissions à ces rôles, ou bien d'activer la vérification avec `/verify`.",
     HELP_PROFILE_DESCRIPTION: "Associez votre compte Discord à votre profil Brawl Stars.",
     HELP_PROFILE_LINK: "Lie un compte BS à votre compte Discord.",
     HELP_PROFILE_UNLINK: "Délie ton compte BS de Discord.",
@@ -240,5 +240,71 @@ export const traductions: Traductions = {
         if(lang == 'fr') return `Français 🇫🇷`;
         return `Inconnu 🏳️`
     },
-    GET_LANG: `La langue est en Français 🇫🇷 !`
+    GET_LANG: `La langue est en Français 🇫🇷 !`,
+    HELP_COMMAND_DESCRIPTION: "Affiche le menu d'aide.",
+    UNLINK_COMMAND_DESCRIPTION: "Dissocie votre compte Brawl Stars de votre compte Discord sur ce serveur.",
+    UNLINK_OPTION_MEMBER_DESCRIPTION: "Le membre duquel délier le profil Brawl Stars",
+    LOG_COMMAND_DESCRIPTION: "Affiche les logs du bot.",
+    AUDIT_COMMAND_DESCRIPTION: "Fournit un audit des autorisations du bot par mesure de sécurité.",
+    ABOUT_COMMAND_DESCRIPTION: "À propos du bot",
+    LINK_COMMAND_DESCRIPTION: "Associe votre compte Brawl Stars à votre compte Discord sur ce serveur.",
+    LINK_OPTION_QRCODE_DESCRIPTION: "Un screen du QR code de votre profil disponible dans Amis -> Mon QR",
+    LINK_OPTION_TAG_DESCRIPTION: "Le tag de joueur, retrouvable sur votre profil Brawl Stars (inutile si QR Code)",
+    LINK_OPTION_MEMBER_DESCRIPTION: "Le membre auquel lier le profil Brawl Stars",
+    SET_COMMAND_DESCRIPTION: "Configurer des paramètres",
+    SET_GRADEROLE_DESCRIPTION: "Définit les rôles Discord que vous associez aux grades des membres de vos clubs.",
+    SET_GRADEROLE_OPTION_GRADE_DESCRIPTION: "Le grade à associer à un rôle Discord",
+    SET_GRADEROLE_OPTION_ROLE_DESCRIPTION: "Le rôle à attribuer",
+    SET_TROPHYROLE_DESCRIPTION: "Définit les rôles Discord que vous associez aux paliers de trophées atteints.",
+    SET_TROPHYROLE_OPTION_TROPHIES_DESCRIPTION: "Le nombre de trophées à atteindre",
+    SET_TROPHYROLE_OPTION_ROLE_DESCRIPTION: "Le rôle à attribuer",
+    SET_CLUBROLE_DESCRIPTION: "Définit un rôle Discord que vous associez aux membres d'un de vos clubs.",
+    SET_CLUBROLE_OPTION_TAG_DESCRIPTION: "Le tag de votre club, retrouvable sur la page de votre club.",
+    SET_CLUBROLE_OPTION_ROLE_DESCRIPTION: "Le rôle à attribuer",
+    SET_AUTORENAME_DESCRIPTION: "Active/désactive le renommage automatique des membres lors de leurs mises à jour.",
+    SET_AUTORENAME_OPTION_RENAME_DESCRIPTION: "Activer / Désactiver",
+    SET_VERIFY_DESCRIPTION: "Active/désactive la vérification des modérateurs avant qu'un membre n'ajoute son profil.",
+    SET_VERIFY_OPTION_VERIFY_DESCRIPTION: "Activer / Désactiver",
+    SET_CLUB_DESCRIPTION: "Lie un club Brawl Stars à votre serveur Discord.",
+    SET_CLUB_OPTION_TAG_DESCRIPTION: "Le tag de votre club, retrouvable sur la page de votre club.",
+    SET_LANG_DESCRIPTION: "Choisissez la langue du bot.",
+    SET_LANG_OPTION_LANG_DESCRIPTION: "La langue",
+    REMOVE_COMMAND_DESCRIPTION: "Supprimer des paramètres du serveur",
+    REMOVE_CLUB_DESCRIPTION: "Dissocie un de vos clubs Brawl Stars de votre serveur Discord et à son rôle.",
+    REMOVE_CLUB_OPTION_CLUB_DESCRIPTION: "Choisis un club",
+    REMOVE_TROPHYROLE_DESCRIPTION: "Dissocie un palier de trophées du rôle qui lui était associé.",
+    REMOVE_TROPHYROLE_OPTION_PALIER_DESCRIPTION: "Choisis un rôle",
+    REMOVE_GRADEROLE_DESCRIPTION: "Dissocie les rôles Discord que vous associez aux grades des membres de vos clubs.",
+    REMOVE_GRADEROLE_OPTION_GRADE_DESCRIPTION: "Le grade à dissocier de son rôle Discord",
+    GET_COMMAND_DESCRIPTION: "Récupérer des paramètres",
+    GET_AUTORENAME_DESCRIPTION: "Indique si le bot renomme automatiquement les membres lors de la mise à jour sur ce serveur.",
+    GET_VERIFY_DESCRIPTION: "Indique si les modérateurs doivent vérifier les membres lorsqu'ils s'enregistrent sur le serveur.",
+    GET_CLUBROLES_DESCRIPTION: "Affiche la liste des rôles Discord associés à vos clubs Brawl Stars.",
+    GET_CLUBS_DESCRIPTION: "Affiche la liste des clubs Brawl Stars associés à ce serveur Discord.",
+    GET_GRADEROLES_DESCRIPTION: "Affiche la liste des rôles de grade dans vos clubs associés à des rôles sur votre serveur Discord.",
+    GET_TROPHYROLES_DESCRIPTION: "Renvoie la liste des rôles attribués à des paliers de trophées",
+    GET_PROFILE_DESCRIPTION: "Affiche votre profil Brawl Stars ou celui d'un autre membre.",
+    GET_PROFILE_OPTION_TAG_DESCRIPTION: "Le tag du joueur Brawl Stars",
+    GET_PROFILE_OPTION_MEMBER_DESCRIPTION: "Le membre Discord",
+    GET_LANG_DESCRIPTION: "Renvoie la langue du bot dans ce serveur.",
+    UPDATE_COMMAND_DESCRIPTION: "Mettre à jour des membres en fonction des paramètres du serveur",
+    UPDATE_PROFILE_DESCRIPTION: "Met à jour les rôles Discord d'un membre en fonction de son profil Brawl Stars lié.",
+    UPDATE_PROFILE_OPTION_MEMBER_DESCRIPTION: "Le membre à mettre à jour",
+    UPDATE_CLUB_DESCRIPTION: "Met à jour les rôles Discord des membres de vos clubs enregistrés sur votre serveur.",
+    UPDATE_CLUB_OPTION_CLUB_DESCRIPTION: "Choisis un club",
+    HELP_CONFIG_SET_LANG: "Change la langue du bot sur le serveur.",
+    HELP_CONFIG_GET_LANG: "Renvoie la langue du bot sur le serveur.",
+    CONFIG_BOT: (botUser:User) => 
+        `${botUser.username} est un bot discord de gestion de clubs Brawl Stars.\n` +
+        `Il permet de mettre à jour automatiquement les membres du serveur en fonction de leur profil en jeu : trophées atteints, club, grade, pseudo.\n\n` +
+        `Pour commencer, associez vos clubs à votre serveur discord avec la commande \`/set club\` ou \`/set clubrole\` si vous voulez aussi leur asscier des rôles.\n` +
+        `Vous pouvez également donner à vos membres des rôles discord en fonction de leurs grades au sein de vos clubs avec la commande \`/set graderole\` (les membres hors de vos clubs ne seront pas affectés).\n` +
+        `Enfin, vous pouvez donner à vos membres des rôles discord en foncion de leurs trophées actuels avec la commande \`/set trophyrole\`.\n\n` +
+        `Une fois fait, vos membres pourront s'enregistrer avec la commande \`/link\`.\n` +
+        `Vos membres seront ensuite automatquement mis à jour lorsque vous exécuterez la commande \`/update\`.\n\n` +
+        `Par défaut, les membres ont besoin de la vérification d'un modérateur pour s'enregistrer afin d'éviter des problèmes d'usurpation.\n` +
+        `Vous pouvez désactiver cette vérification avec la commande \`/set verify\`, ce qui est déconseillé.\n\n` +
+        `Une fois la configuration terminée, exécutez la commande \`/audit\` afin de vérifier que celle-ci ne présente pas de faille de sécurité.`,
+    CONFIG_COMMAND_DESCRIPTION: `Guide pour configurer le bot.`,
+    HELP_CONFIG_CONFIG: "Affiche un guide rapide pour configurer le bot.",
 }

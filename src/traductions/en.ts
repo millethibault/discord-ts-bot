@@ -8,7 +8,7 @@ export const traductions: Traductions = {
     ABOUT_BOT: (botUser: User) =>
         `${botUser.username} is a Discord bot for managing Brawl Stars clubs.\n` +
         `It automatically updates server members based on their in-game profile: trophies reached, club, rank, nickname.\n` +
-        `Feel free to add the bot to your server: [PLACEHOLDER]`,
+        `Feel free to add the bot to your server by clickng on my profile !`,
     ERROR_SYNC_BOT: `Bot synchronization error`,
     AUDIT_DONE: (dbRolesLength: number, botMember: GuildMember) =>
         `Audit completed.\n${botMember} manages \`${dbRolesLength}\` roles.\n\n`,
@@ -239,5 +239,71 @@ export const traductions: Traductions = {
         if (lang === 'fr') return `French 🇫🇷`;
         return `Unknown 🏳️`;
     },
-    GET_LANG: `The language is set to Engish 🇬🇧 !`
+    GET_LANG: `The language is set to Engish 🇬🇧 !`,
+    HELP_COMMAND_DESCRIPTION: "Displays the help menu.",
+    UNLINK_COMMAND_DESCRIPTION: "Unlink your Brawl Stars account from your Discord account on this server.",
+    UNLINK_OPTION_MEMBER_DESCRIPTION: "The member whose Brawl Stars profile should be unlinked",
+    LOG_COMMAND_DESCRIPTION: "Displays the bot's logs.",
+    AUDIT_COMMAND_DESCRIPTION: "Provides a bot permission audit for security purposes.",
+    ABOUT_COMMAND_DESCRIPTION: "About the bot",
+    LINK_COMMAND_DESCRIPTION: "Link your Brawl Stars account to your Discord account on this server.",
+    LINK_OPTION_QRCODE_DESCRIPTION: "A screenshot of your profile's QR code available in Friends → My QR",
+    LINK_OPTION_TAG_DESCRIPTION: "The player tag, found on your Brawl Stars profile (not needed if QR Code is provided)",
+    LINK_OPTION_MEMBER_DESCRIPTION: "The member to link the Brawl Stars profile to",
+    SET_COMMAND_DESCRIPTION: "Configure bot settings",
+    SET_GRADEROLE_DESCRIPTION: "Define Discord roles associated with the ranks of your club members.",
+    SET_GRADEROLE_OPTION_GRADE_DESCRIPTION: "The rank to associate with a Discord role",
+    SET_GRADEROLE_OPTION_ROLE_DESCRIPTION: "The role to assign",
+    SET_TROPHYROLE_DESCRIPTION: "Define Discord roles associated with trophy milestones.",
+    SET_TROPHYROLE_OPTION_TROPHIES_DESCRIPTION: "The number of trophies to reach",
+    SET_TROPHYROLE_OPTION_ROLE_DESCRIPTION: "The role to assign",
+    SET_CLUBROLE_DESCRIPTION: "Define a Discord role associated with members of one of your clubs.",
+    SET_CLUBROLE_OPTION_TAG_DESCRIPTION: "Your club's tag, found on your club page.",
+    SET_CLUBROLE_OPTION_ROLE_DESCRIPTION: "The role to assign",
+    SET_AUTORENAME_DESCRIPTION: "Enable/disable automatic renaming of members during updates.",
+    SET_AUTORENAME_OPTION_RENAME_DESCRIPTION: "Enable / Disable",
+    SET_VERIFY_DESCRIPTION: "Enable/disable moderator verification before a member adds their profile.",
+    SET_VERIFY_OPTION_VERIFY_DESCRIPTION: "Enable / Disable",
+    SET_CLUB_DESCRIPTION: "Link a Brawl Stars club to your Discord server.",
+    SET_CLUB_OPTION_TAG_DESCRIPTION: "Your club's tag, found on your club page.",
+    SET_LANG_DESCRIPTION: "Choose the bot's language.",
+    SET_LANG_OPTION_LANG_DESCRIPTION: "The language",
+    REMOVE_COMMAND_DESCRIPTION: "Remove server settings",
+    REMOVE_CLUB_DESCRIPTION: "Unlink one of your Brawl Stars clubs from your Discord server and its role.",
+    REMOVE_CLUB_OPTION_CLUB_DESCRIPTION: "Choose a club",
+    REMOVE_TROPHYROLE_DESCRIPTION: "Unlink a trophy milestone from its associated role.",
+    REMOVE_TROPHYROLE_OPTION_PALIER_DESCRIPTION: "Choose a role",
+    REMOVE_GRADEROLE_DESCRIPTION: "Unlink Discord roles associated with the ranks of your club members.",
+    REMOVE_GRADEROLE_OPTION_GRADE_DESCRIPTION: "The rank to unlink from its Discord role",
+    GET_COMMAND_DESCRIPTION: "Retrieve server settings",
+    GET_AUTORENAME_DESCRIPTION: "Indicates whether the bot automatically renames members during updates on this server.",
+    GET_VERIFY_DESCRIPTION: "Indicates whether moderators must verify members when they register on the server.",
+    GET_CLUBROLES_DESCRIPTION: "Displays the list of Discord roles associated with your Brawl Stars clubs.",
+    GET_CLUBS_DESCRIPTION: "Displays the list of Brawl Stars clubs linked to this Discord server.",
+    GET_GRADEROLES_DESCRIPTION: "Displays the list of rank roles in your clubs associated with Discord roles.",
+    GET_TROPHYROLES_DESCRIPTION: "Returns the list of roles assigned to trophy milestones",
+    GET_PROFILE_DESCRIPTION: "Displays your Brawl Stars profile or another member's.",
+    GET_PROFILE_OPTION_TAG_DESCRIPTION: "The Brawl Stars player tag",
+    GET_PROFILE_OPTION_MEMBER_DESCRIPTION: "The Discord member",
+    GET_LANG_DESCRIPTION: "Returns the bot's language on this server.",
+    UPDATE_COMMAND_DESCRIPTION: "Update members based on server settings",
+    UPDATE_PROFILE_DESCRIPTION: "Updates a member's Discord roles based on their linked Brawl Stars profile.",
+    UPDATE_PROFILE_OPTION_MEMBER_DESCRIPTION: "The member to update",
+    UPDATE_CLUB_DESCRIPTION: "Updates Discord roles for members of your registered clubs on this server.",
+    UPDATE_CLUB_OPTION_CLUB_DESCRIPTION: "Choose a club",
+    HELP_CONFIG_SET_LANG: "Changes the bot's language on the server.",
+    HELP_CONFIG_GET_LANG: "Returns the bot's language on this server.",
+    CONFIG_BOT: (botUser: User) =>
+        `${botUser.username} is a Discord bot for managing Brawl Stars clubs.\n` +
+        `It automatically updates server members based on their in-game profile: trophies reached, club, rank, and nickname.\n\n` +
+        `To get started, link your clubs to your Discord server using the command \`/set club\` or \`/set clubrole\` if you also want to assign roles.\n` +
+        `You can also assign Discord roles to your members based on their ranks within your clubs using the command \`/set graderole\` (members outside your clubs won’t be affected).\n` +
+        `Finally, you can assign Discord roles to your members based on their current trophy count using the command \`/set trophyrole\`.\n\n` +
+        `Once that’s done, your members can register using the command \`/link\`.\n` +
+        `They will then be automatically updated when you run the command \`/update\`.\n\n` +
+        `By default, members require moderator verification to register, in order to prevent impersonation issues.\n` +
+        `You can disable this verification using the command \`/set verify\`, although this is not recommended.\n\n` +
+        `Once your setup is complete, run the command \`/audit\` to ensure there are no security vulnerabilities.`,
+    CONFIG_COMMAND_DESCRIPTION: "Guide to configuring the bot.",
+    HELP_CONFIG_CONFIG: "Displays a quick guide to setting up the bot.",
 }

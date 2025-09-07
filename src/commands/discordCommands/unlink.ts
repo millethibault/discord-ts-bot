@@ -35,12 +35,24 @@ export async function handleUnlinkProfile(
 
 
 import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
+import { traductions as tradFr } from '../../traductions/fr';
+import { traductions as tradEn } from '../../traductions/en';
 
 export const data = new SlashCommandBuilder()
     .setName('unlink')
-    .setDescription('Dissocie votre compte Brawl Stars de votre compte discord sur ce serveur.')
-    .addUserOption(option => 
+    .setDescription(tradEn.UNLINK_COMMAND_DESCRIPTION)
+    .setDescriptionLocalizations({
+      "fr": tradFr.UNLINK_COMMAND_DESCRIPTION,
+      "en-GB": tradEn.UNLINK_COMMAND_DESCRIPTION,
+      "en-US": tradEn.UNLINK_COMMAND_DESCRIPTION
+    })
+    .addUserOption(option =>
       option.setName('membre')
-        .setDescription('Le membre duquel délier le profil Brawl Stars')
+        .setDescription(tradEn.UNLINK_OPTION_MEMBER_DESCRIPTION)
+        .setDescriptionLocalizations({
+          "fr": tradFr.UNLINK_OPTION_MEMBER_DESCRIPTION,
+          "en-GB": tradEn.UNLINK_OPTION_MEMBER_DESCRIPTION,
+          "en-US": tradEn.UNLINK_OPTION_MEMBER_DESCRIPTION
+        })
         .setRequired(false)
     )

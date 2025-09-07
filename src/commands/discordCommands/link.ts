@@ -64,22 +64,44 @@ export async function handleLinkProfile(
 
 
 import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
+import { traductions as tradFr } from '../../traductions/fr';
+import { traductions as tradEn } from '../../traductions/en';
 
 export const data = new SlashCommandBuilder()
     .setName('link')
-    .setDescription('Associe votre compte Brawl Stars à votre compte discord sur ce serveur.')
-    .addAttachmentOption(option => 
+    .setDescription(tradEn.LINK_COMMAND_DESCRIPTION)
+    .setDescriptionLocalizations({
+      fr: tradFr.LINK_COMMAND_DESCRIPTION,
+      "en-GB": tradEn.LINK_COMMAND_DESCRIPTION,
+      "en-US": tradEn.LINK_COMMAND_DESCRIPTION
+    })
+    .addAttachmentOption(option =>
       option.setName('qrcode')
-      .setDescription('Un screen du QR code de votre profil disponible dans Amis -> Mon QR')
-      .setRequired(false)
+        .setDescription(tradEn.LINK_OPTION_QRCODE_DESCRIPTION)
+        .setDescriptionLocalizations({
+          fr: tradFr.LINK_OPTION_QRCODE_DESCRIPTION,
+          "en-GB": tradEn.LINK_OPTION_QRCODE_DESCRIPTION,
+          "en-US": tradEn.LINK_OPTION_QRCODE_DESCRIPTION
+        })
+        .setRequired(false)
     )
     .addStringOption(option =>
       option.setName('tag')
-        .setDescription('Le tag de joueur, retrouvable sur votre profil Brawl Stars (inutile si QR Code)')
+        .setDescription(tradEn.LINK_OPTION_TAG_DESCRIPTION)
+        .setDescriptionLocalizations({
+          fr: tradFr.LINK_OPTION_TAG_DESCRIPTION,
+          "en-GB": tradEn.LINK_OPTION_TAG_DESCRIPTION,
+          "en-US": tradEn.LINK_OPTION_TAG_DESCRIPTION
+        })
         .setRequired(false)
     )
-    .addUserOption(option => 
+    .addUserOption(option =>
       option.setName('membre')
-        .setDescription('Le membre auquel lier le profil Brawl Stars')
+        .setDescription(tradEn.LINK_OPTION_MEMBER_DESCRIPTION)
+        .setDescriptionLocalizations({
+          fr: tradFr.LINK_OPTION_MEMBER_DESCRIPTION,
+          "en-GB": tradEn.LINK_OPTION_MEMBER_DESCRIPTION,
+          "en-US": tradEn.LINK_OPTION_MEMBER_DESCRIPTION
+        })
         .setRequired(false)
     )

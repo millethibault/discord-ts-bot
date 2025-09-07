@@ -53,7 +53,7 @@ export async function handleLog(
 
   const collector = message.createMessageComponentCollector({
     componentType: ComponentType.Button,
-    time: 5 * 60 * 1000
+    time: 60 * 60 * 1000
   });
 
   collector.on('collect', async i => {
@@ -77,8 +77,14 @@ export async function handleLog(
 
 
 import { SlashCommandBuilder } from 'discord.js';
+import { traductions as tradFr } from '../../traductions/fr';
+import { traductions as tradEn } from '../../traductions/en';
 
 export const data = new SlashCommandBuilder()
   .setName('log')
-  .setDescription('Affiche les logs du bot.')
-  .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
+  .setDescription(tradEn.LOG_COMMAND_DESCRIPTION)
+  .setDescriptionLocalizations({
+    "fr": tradFr.LOG_COMMAND_DESCRIPTION,
+    "en-GB": tradEn.LOG_COMMAND_DESCRIPTION,
+    "en-US": tradEn.LOG_COMMAND_DESCRIPTION
+  })

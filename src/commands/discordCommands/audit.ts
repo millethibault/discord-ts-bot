@@ -5,6 +5,7 @@ import { getClubRoles } from '../../database/clubRole';
 import { client } from '../../bot/client';
 import comparePermissions from '../../utils/comparePermissions';
 import { getTraductions } from '../../traductions/tradFunctions';
+import { getVerify } from '../../database/verify';
 
 export async function handleAudit(interaction: ChatInputCommandInteraction & { guild: Guild, member: GuildMember }): Promise<Message> {
     const traductions = await getTraductions(interaction.guild)
@@ -49,9 +50,14 @@ export async function handleAudit(interaction: ChatInputCommandInteraction & { g
 }
 
 import { SlashCommandBuilder, PermissionFlagsBits} from 'discord.js';
-import { getVerify } from '../../database/verify';
+import { traductions as tradFr } from '../../traductions/fr';
+import { traductions as tradEn } from '../../traductions/en';
 
 export const data = new SlashCommandBuilder()
   .setName('audit')
-  .setDescription('Fournit un audit des autorisations du bot par mesure de sécurité.')
-  .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
+    .setDescription(tradEn.AUDIT_COMMAND_DESCRIPTION)
+    .setDescriptionLocalizations({
+    "fr": tradFr.AUDIT_COMMAND_DESCRIPTION,
+    "en-GB": tradEn.AUDIT_COMMAND_DESCRIPTION,
+    "en-US": tradEn.AUDIT_COMMAND_DESCRIPTION
+    })

@@ -1,25 +1,53 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+import { traductions as tradFr } from '../../traductions/fr';
+import { traductions as tradEn } from '../../traductions/en';
 
 export const data = new SlashCommandBuilder()
   .setName('update')
-  .setDescription('Mettre à jour des membres en fonction des paramètres du serveur')
-  .addSubcommand(sub => sub
-    .setName('profile')
-    .setDescription('Met à jours les rôles discord d\'un membre en fonction de son profil Brawl Stars lié.')
-    .addUserOption(option => 
+  .setDescription(tradEn.UPDATE_COMMAND_DESCRIPTION)
+  .setDescriptionLocalizations({
+    fr: tradFr.UPDATE_COMMAND_DESCRIPTION,
+    "en-GB": tradEn.UPDATE_COMMAND_DESCRIPTION,
+    "en-US": tradEn.UPDATE_COMMAND_DESCRIPTION
+  })
+  .addSubcommand(sub =>
+    sub.setName('profile')
+      .setDescription(tradEn.UPDATE_PROFILE_DESCRIPTION)
+      .setDescriptionLocalizations({
+        fr: tradFr.UPDATE_PROFILE_DESCRIPTION,
+        "en-GB": tradEn.UPDATE_PROFILE_DESCRIPTION,
+        "en-US": tradEn.UPDATE_PROFILE_DESCRIPTION
+      })
+      .addUserOption(option =>
         option.setName('membre')
-        .setDescription('Le membre à mettre à jour')
-        .setRequired(false)
-    )
+          .setDescription(tradEn.UPDATE_PROFILE_OPTION_MEMBER_DESCRIPTION)
+          .setDescriptionLocalizations({
+            fr: tradFr.UPDATE_PROFILE_OPTION_MEMBER_DESCRIPTION,
+            "en-GB": tradEn.UPDATE_PROFILE_OPTION_MEMBER_DESCRIPTION,
+            "en-US": tradEn.UPDATE_PROFILE_OPTION_MEMBER_DESCRIPTION
+          })
+          .setRequired(false)
+      )
   )
-    .addSubcommand(sub => sub
-    .setName('club')
-    .setDescription('Met à jours les rôles discord des membres de vos clubs enregistrés sur votre serveur.')
-    .addStringOption(option =>
+  .addSubcommand(sub =>
+    sub.setName('club')
+      .setDescription(tradEn.UPDATE_CLUB_DESCRIPTION)
+      .setDescriptionLocalizations({
+        fr: tradFr.UPDATE_CLUB_DESCRIPTION,
+        "en-GB": tradEn.UPDATE_CLUB_DESCRIPTION,
+        "en-US": tradEn.UPDATE_CLUB_DESCRIPTION
+      })
+      .addStringOption(option =>
         option.setName('club')
-        .setDescription('Choisis un club')
-        .setRequired(false)
-        .setAutocomplete(true)
-    )
-)
+          .setDescription(tradEn.UPDATE_CLUB_OPTION_CLUB_DESCRIPTION)
+          .setDescriptionLocalizations({
+            fr: tradFr.UPDATE_CLUB_OPTION_CLUB_DESCRIPTION,
+            "en-GB": tradEn.UPDATE_CLUB_OPTION_CLUB_DESCRIPTION,
+            "en-US": tradEn.UPDATE_CLUB_OPTION_CLUB_DESCRIPTION
+          })
+          .setRequired(false)
+          .setAutocomplete(true)
+      )
+  )
+
 .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
