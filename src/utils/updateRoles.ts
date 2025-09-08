@@ -176,7 +176,7 @@ export async function updateMemberName(
   if (!autoRename || member.displayName === playerName) return null;
   if(!client.user) return null;
   const botMember = await member.guild.members.fetch(client.user.id);
-  if (!botMember.permissions.has('ManageRoles')) {
+  if (!botMember.permissions.has('ManageNicknames')) {
     messageString.value += traductions.UPDATE_NICKNAME_MISSING_PERMISSION;
     return null;
   }
