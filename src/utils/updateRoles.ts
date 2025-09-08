@@ -177,10 +177,10 @@ export async function updateMemberName(
   if(!client.user) return null;
   const botMember = await member.guild.members.fetch(client.user.id);
   if (!botMember.permissions.has('ManageNicknames')) {
-    messageString.value += traductions.UPDATE_NICKNAME_MISSING_PERMISSION;
+    messageString.value += traductions.UPDATE_NICKNAME_MISSING_PERMISSION + "\n";
     return null;
   }
   await member.setNickname(playerName);
-  messageString.value += traductions.NAME_UPDATED(playerName) + "\n";
+  //messageString.value += traductions.NAME_UPDATED(playerName) + "\n";
   return playerName;
 }
