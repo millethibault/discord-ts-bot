@@ -58,6 +58,7 @@ export const traductions: Traductions = {
     UNLINK_SUCCESS: (username, guildName) =>
         `✅ Le compte Discord de ${username} sur le serveur ${guildName} n'est plus lié à aucun compte Brawl Stars.`,
     ERROR_BOT_MISSING_PERMISSION: "❌ Je n'ai pas la permission d'attribuer des rôles sur ce serveur !",
+    UPDATE_NICKNAME_MISSING_PERMISSION: "❌ Je n'ai pas la permission de changer les pseudos des membres sur ce serveur !",
     ERROR_BOT_ROLE_TOO_LOW: (targetName, targetRole) =>
         `❌ Je ne peux pas gérer ${targetName} car son rôle est trop élevé (${targetRole}).`,
     ERROR_USER_ROLE_TOO_LOW: (targetName, targetRole, executorRole) =>
@@ -179,7 +180,7 @@ export const traductions: Traductions = {
     GET_PROFILE_TROPHIES_LINE: (trophies, status, role, removed) =>
         `${trophies}🏆 → ${status} ${role ?? traductions.LABEL_NO_ROLE} ${removed}`,
     GET_PROFILE_CLUB_LINE: (clubName, clubTag, status, role, removed) =>
-        `Club : ${clubName} (\`#${clubTag}\`) → ${status} ${role ?? traductions.LABEL_NO_ROLE} ${removed}`,
+        `Club : ${clubName} (\`${clubTag}\`) → ${status} ${role ?? traductions.LABEL_NO_ROLE} ${removed}`,
     GET_PROFILE_GRADE_LINE: (grade, status, role, removed) =>
         `Grade : ${grade} → ${status} ${role ?? traductions.LABEL_NO_ROLE} ${removed}`,
     GET_PROFILE_REMINDER_UPDATE: "Pensez à mettre vos rôles à jour 😉.",

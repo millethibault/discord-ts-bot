@@ -219,4 +219,5 @@ export interface Traductions {
   CONFIG_BOT: (botMember: User) => string;
   CONFIG_COMMAND_DESCRIPTION: string;
   HELP_CONFIG_CONFIG: string;
+  UPDATE_NICKNAME_MISSING_PERMISSION: string;
 }

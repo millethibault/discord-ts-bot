@@ -174,7 +174,12 @@ export async function updateMemberName(
   const traductions = await getTraductions(member.guild);
   const autoRename = await getAutoRename(member.guild);
   if (!autoRename || member.displayName === playerName) return null;
-
+  if(!client.user) return null;
+  const botMember = await member.guild.members.fetch(client.user.id);
+  if (!botMember.permissions.has('ManageRoles')) {
+    messageString.value += traductions.UPDATE_NICKNAME_MISSING_PERMISSION;
+    return null;
+  }
   await member.setNickname(playerName);
   messageString.value += traductions.NAME_UPDATED(playerName) + "\n";
   return playerName;
